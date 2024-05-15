@@ -1,10 +1,9 @@
-import { Button } from "./components/Button";
+import Login from "@/pages/login";
+
 
 function App() {
   return (
-    <>
-      <Button.Primary  type="button">asdasd</Button.Primary>{" "}
-    </>
+    <Login />
   );
 }
 
