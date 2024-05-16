@@ -11,8 +11,12 @@
 
   html {
     font-family: "Popins", sans-serif;
-    font-style: normal;
-    font-weight: 400;
+  }
+
+  @layer utilities {
+    .h-screen-header {
+      height: calc(100vh - 56px);
+    }
   }
 }
 
