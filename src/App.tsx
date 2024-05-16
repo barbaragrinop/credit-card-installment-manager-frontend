@@ -7,11 +7,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />
-  }, 
+  },
   {
     path: "/home",
-    element: <HomePage /> 
-  }, 
+    element: <HomePage />
+  },
   {
     path: "*",
     element: <ErrorPage />
@@ -20,8 +20,8 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-      <RouterProvider router={router} />
-    )
+    <RouterProvider router={router} />
+  )
 }
 
 export default App;

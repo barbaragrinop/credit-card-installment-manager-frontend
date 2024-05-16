@@ -12,14 +12,9 @@ type Props = {
 
 export default function Container({ pageName = "", hScreen = true, children, isLoggedIn }: Props) {
   return (
-    <div className={classNames(`bg-gray-200 h-full flex flex-col`, 
-    // {
-    //     "min-h-screen": hScreen,
-    //     "h-full": !hScreen
-    // }
-    )}>
+    <div className="bg-gray-200 h-full flex flex-col">
         <Header pageName={pageName} isLoggedIn={isLoggedIn} />
-        <div className="px-20 pt-10 h-full">
+        <div className="px-16 pt-10 h-full">
             { children }
         </div>
     </div>
