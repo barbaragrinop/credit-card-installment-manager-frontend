@@ -2,21 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 @layer base {
-  * {
-    margin: 0;
-    padding: 0;
+
+  :root {
+    font-family: "Popins", sans-serif;
+    font-weight: 400;
     box-sizing: border-box;
   }
-
-  html {
-    font-family: "Popins", sans-serif;
+  
+  body {
+    margin: 0 auto;
+    padding: 0;
+    /* min-height: 100vh; */
   }
 
-  @layer utilities {
-    .h-screen-header {
-      height: calc(100vh - 56px);
-    }
+  #root {
+    height: 100vh;
   }
 }
 

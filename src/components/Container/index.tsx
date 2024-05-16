@@ -10,14 +10,16 @@ type Props = {
     isLoggedIn?: boolean;
 }
 
-export default function Container({ pageName = "", hScreen = false, children, isLoggedIn }: Props) {
+export default function Container({ pageName = "", hScreen = true, children, isLoggedIn }: Props) {
   return (
-    <div className={classNames(" bg-gray-200 ", {
-        "min-h-screen": hScreen,
-        "h-full": !hScreen
-    })}>
+    <div className={classNames(`bg-gray-200 h-full flex flex-col`, 
+    // {
+    //     "min-h-screen": hScreen,
+    //     "h-full": !hScreen
+    // }
+    )}>
         <Header pageName={pageName} isLoggedIn={isLoggedIn} />
-        <div className="px-20 py-10">
+        <div className="px-20 pt-10 h-full">
             { children }
         </div>
     </div>
