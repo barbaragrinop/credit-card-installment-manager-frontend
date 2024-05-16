@@ -2,7 +2,7 @@ import { Button } from "@/components/Button";
 import Container from "@/components/Container";
 import { Field } from "@/components/Field";
 
-function Login() {
+function LoginPage() {
     return (
         <Container isLoggedIn={false}>
             <div className="h-full flex flex-col justify-center">
@@ -19,4 +19,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default LoginPage;
