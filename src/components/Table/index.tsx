@@ -1,4 +1,4 @@
-import { AccessorKeyColumnDef, ColumnHelper, createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { AccessorKeyColumnDef, createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useMemo, useState } from "react"
 
 type User = {
@@ -9,10 +9,6 @@ type User = {
     progress: number
     status: string
 }
-
-const data: User[] = [
-
-]
 
 function Table() {
 
@@ -49,10 +45,12 @@ function Table() {
         ]
     }, [])
 
-
-
-
-    const tableData = useReactTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+    const tableData = useReactTable({
+        columns,
+        data,
+        getCoreRowModel: getCoreRowModel(),
+        enableSorting: true
+    })
 
     return (
         <div className="p-2">
@@ -63,7 +61,7 @@ function Table() {
                             {headerGroup.headers.map(header => (
                                 <th key={header.id}>
                                     {header.isPlaceholder ? null : flexRender(
-                                        header.column.columnDef.header, 
+                                        header.column.columnDef.header,
                                         header.getContext()
                                     )}
                                 </th>
@@ -77,7 +75,7 @@ function Table() {
                             {row.getVisibleCells().map(cell => (
                                 <td key={cell.id}>
                                     {flexRender(
-                                        cell.column.columnDef.cell, 
+                                        cell.column.columnDef.cell,
                                         cell.getContext()
                                     )}
                                 </td>
