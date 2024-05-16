@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import Container from "@/components/Container";
 import { Field } from "@/components/Field";
+import Table from "@/components/Table";
 
 function HomePage() {
   return (
@@ -22,6 +23,7 @@ function HomePage() {
           </div>
         </form>
         <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg"/>
+        <Table />
       </div>
     </Container>
   )
