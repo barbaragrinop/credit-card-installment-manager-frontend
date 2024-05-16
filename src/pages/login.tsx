@@ -6,7 +6,7 @@ function Login() {
         <Field.Text id="text" label="text" name="text" onChange={(e) => console.log(e)}  />
         <Field.Number id="number" label="number" name="number"   />
         <Field.Date id="number" label="number" name="number"  onChange={() => null}   />
-
+        <Field.Checkbox id="checkbox" name="checkbox" label="Checkbox" />
         </div>
     );
 }
