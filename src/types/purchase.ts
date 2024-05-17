@@ -1,5 +1,5 @@
 
-export type Purchase = {
+export type Installment = {
     id: number;
     loja: string;
     produto: string;
@@ -7,16 +7,21 @@ export type Purchase = {
     parcelas: number;
     cartao: string; 
     dtCompra: Date;
-    jan: boolean;
-    fev: boolean;
-    mar: boolean;
-    abr: boolean;
-    mai: boolean;
-    jun: boolean;
-    jul: boolean;
-    ago: boolean;
-    set: boolean;
-    out: boolean;
-    nov: boolean;
-    dez: boolean;
+    jan: InstallmentDetails;
+    fev: InstallmentDetails;
+    mar: InstallmentDetails;
+    abr: InstallmentDetails;
+    mai: InstallmentDetails;
+    jun: InstallmentDetails;
+    jul: InstallmentDetails;
+    ago: InstallmentDetails;
+    set: InstallmentDetails;
+    out: InstallmentDetails;
+    nov: InstallmentDetails;
+    dez: InstallmentDetails;
+}
+
+type InstallmentDetails = {
+    dtPagamento: Date;
+    valorPago: number;
 }
