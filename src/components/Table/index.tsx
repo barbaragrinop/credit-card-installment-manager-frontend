@@ -1,5 +1,6 @@
 import { AccessorKeyColumnDef, createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useMemo, useState } from "react"
+import TableResizer from "./components/table-resizer"
 
 type User = {
     firstName: string
@@ -75,21 +76,28 @@ function Table() {
         columns,
         data,
         getCoreRowModel: getCoreRowModel(),
-        enableSorting: true
+        columnResizeMode: "onChange"
     })
 
     return (
         <div className="p-2">
             <table width={getTotalSize()}>
-                <thead>
+                <thead className="">
                     {getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id} >
                             {headerGroup.headers.map(header => (
-                                <th className="border border-gray-900" key={header.id} style={{ width: header.getSize() }}>
+                                <th className="border border-gray-900 relative" key={header.id} style={{ width: header.getSize() }}>
                                     {header.isPlaceholder ? null : flexRender(
                                         header.column.columnDef.header,
                                         header.getContext()
                                     )}
+
+                                    <TableResizer 
+                                        isResizing={header.column.getIsResizing()}
+                                        onMouseDown={header.getResizeHandler()}
+                                        onTouchStart={header.getResizeHandler()}
+                                    />
+
                                 </th>
                             ))}
                         </tr>
