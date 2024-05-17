@@ -10,25 +10,51 @@ type User = {
     status: string
 }
 
+const DATA: User[] = [
+    {
+        firstName: "Tanner",
+        lastName: "Linsley",
+        age: 33,
+        visits: 100,
+        progress: 50,
+        status: "Married"
+    },
+    {
+        firstName: "Kevin",
+        lastName: "Vandy",
+        age: 27,
+        visits: 200,
+        progress: 100,
+        status: "Single"
+    }
+]
+
+const columns = [
+    {
+        accessorKey: 'firstName',
+        header: 'First Name',
+        cell: (info: any) => info.getValue()
+    },
+    {
+        accessorKey: 'lastname',
+        header: 'Last Name',
+        cell: (info: any) => info.getValue()
+    },
+    {
+        accessorKey: 'age',
+        header: 'Age',
+        cell: (info: any) => info.getValue()
+    },
+    {
+        accessorKey: 'status',
+        header: 'Status',
+        cell: (info: any) => info.getValue()
+    }
+]
+
 function Table() {
 
-    const [data, setData] = useState<User[]>([
-        {
-            firstName: "Tanner",
-            lastName: "Linsley",
-            age: 33,
-            visits: 100,
-            progress: 50,
-            status: "Married"
-        },
-        {
-            firstName: "Kevin",
-            lastName: "Vandy",
-            age: 27,
-            visits: 200,
-            progress: 100,
-            status: "Single"
-    }]);
+    const [data, setData] = useState<User[]>(DATA);
 
     const columnHelper = createColumnHelper<User>();
 
@@ -36,7 +62,7 @@ function Table() {
         return [
             columnHelper.accessor('firstName', {
                 cell: info => info.getValue(),
-                footer: info => info.column.id,
+
             }),
             columnHelper.accessor('lastName', {
                 cell: info => info.getValue(),
@@ -45,7 +71,7 @@ function Table() {
         ]
     }, [])
 
-    const tableData = useReactTable({
+    const { getHeaderGroups, getRowModel, getTotalSize } = useReactTable({
         columns,
         data,
         getCoreRowModel: getCoreRowModel(),
@@ -54,12 +80,12 @@ function Table() {
 
     return (
         <div className="p-2">
-            <table>
+            <table width={getTotalSize()}>
                 <thead>
-                    {tableData.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id}>
+                    {getHeaderGroups().map(headerGroup => (
+                        <tr key={headerGroup.id} >
                             {headerGroup.headers.map(header => (
-                                <th key={header.id}>
+                                <th className="border border-gray-900" key={header.id} style={{ width: header.getSize() }}>
                                     {header.isPlaceholder ? null : flexRender(
                                         header.column.columnDef.header,
                                         header.getContext()
@@ -70,10 +96,10 @@ function Table() {
                     ))}
                 </thead>
                 <tbody>
-                    {tableData.getRowModel().rows.map(row => (
-                        <tr key={row.id}>
+                    {getRowModel().rows.map(row => (
+                        <tr key={row.id} className="border border-gray-900">
                             {row.getVisibleCells().map(cell => (
-                                <td key={cell.id}>
+                                <td key={cell.id} className="border border-gray-900" style={{ width: cell.column.getSize() }}>
                                     {flexRender(
                                         cell.column.columnDef.cell,
                                         cell.getContext()
