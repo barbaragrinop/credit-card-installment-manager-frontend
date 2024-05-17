@@ -12,16 +12,16 @@ function HomePage() {
 
   return (
     <Container pageName="Home" hScreen>
-      <div className="h-full flex flex-col bg-gray-100 rounded p-4">
+      <div className="min-h-full flex flex-col bg-gray-100 rounded p-4">
         <h1 className="text-3xl pb-12">
           Gerenciador de parcelas
         </h1>
         <form >
           <div className="grid grid-cols-4 gap-4">
-            <Field.Text name="Loja" id="loja" label="Loja" />
-            <Field.Text name="Product" id="product" label="Product" />
-            <Field.Text name="Cartão" id="cartao" label="Cartão" />
-            <Field.Text name="Qtd. Parcelas" id="qtdParcelas" label="Qtd. Parcelas" />
+            <Field.Text name="loja" id="loja" label="Loja" />
+            <Field.Text name="product" id="product" label="Product" />
+            <Field.Text name="cartao" id="cartao" label="Cartão" />
+            <Field.Text name="qtdParcelas" id="qtdParcelas" label="Qtd. Parcelas" />
           </div>
           <div className="flex gap-4 justify-end pt-6">
             <Button.Primary>Cancelar</Button.Primary>
@@ -29,11 +29,12 @@ function HomePage() {
           </div>
         </form>
         <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
-        <div className="">
-          <p>Nome do  produto</p>
+        <>
           {
             data.map((item) => (
-              <>
+              <div key={item.id}>
+                <p className="text-center bold">{item.produto}</p>
+                <p className="text-center">{item.cartao}</p>
                 <Table data={[item]} columns={[
                   {
                     accessorKey: 'produto',
@@ -46,8 +47,8 @@ function HomePage() {
                     header: 'jan',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -57,8 +58,8 @@ function HomePage() {
                     header: 'fev',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -68,8 +69,8 @@ function HomePage() {
                     header: 'mar',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -79,8 +80,8 @@ function HomePage() {
                     header: 'abr',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -90,8 +91,8 @@ function HomePage() {
                     header: 'mai',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -101,8 +102,8 @@ function HomePage() {
                     header: 'jun',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -112,8 +113,8 @@ function HomePage() {
                     header: 'jul',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -123,8 +124,8 @@ function HomePage() {
                     header: 'ago',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -134,8 +135,8 @@ function HomePage() {
                     header: 'set',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -145,8 +146,8 @@ function HomePage() {
                     header: 'out',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -156,8 +157,8 @@ function HomePage() {
                     header: 'nov',
                     cell: ({ cell }) => {
                       return (
-                        <div className="flex gap-4 items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="flex gap-4 items-center justify-center" key={`${cell.id}-${cell.column}`}>
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -167,8 +168,8 @@ function HomePage() {
                     header: 'dez',
                     cell: ({ cell }) => {
                       return (
-                        <div className="items-center justify-center">
-                          <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
+                        <div className="items-center justify-center" key={`${cell.id}-${cell.column}`} >
+                          <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
                         </div>
                       )
                     }
@@ -176,153 +177,14 @@ function HomePage() {
                 ]} />
                         <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
 
-              </>
+              </div>
 
             ))
           }
 
           {/* <Table  />  */}
-        </div>
-        <Table data={data} columns={[
-          {
-            accessorKey: 'produto',
-            header: 'Produto',
-            cell: (info: any) => info.getValue()
-
-          },
-          {
-            accessorKey: 'jan',
-            header: 'jan',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'fev',
-            header: 'fev',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'mar',
-            header: 'mar',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'abr',
-            header: 'abr',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'mai',
-            header: 'mai',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'jun',
-            header: 'jun',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'jul',
-            header: 'jul',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'ago',
-            header: 'ago',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'set',
-            header: 'set',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'out',
-            header: 'out',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'nov',
-            header: 'nov',
-            cell: ({ cell }) => {
-              return (
-                <div className="flex gap-4 items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          },
-          {
-            accessorKey: 'dez',
-            header: 'dez',
-            cell: ({ cell }) => {
-              return (
-                <div className="items-center justify-center">
-                  <Field.Checkbox id="desc" checked={cell.getValue()} label="" name="desc" />
-                </div>
-              )
-            }
-          }
-        ]} />
+        </>
+       
       </div>
     </Container>
   )

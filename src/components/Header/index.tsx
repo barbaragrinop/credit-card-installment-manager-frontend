@@ -8,7 +8,7 @@ type Props = Pages & {
 
 export function Header({ pageName, isLoggedIn = true }: Props) {
   return (
-    <header style={{height: headerHeight}} className={classNames(`flex px-20 bg-cyan-800 items-center text-white`, {
+    <div style={{minHeight: headerHeight}} className={classNames(`flex px-20 bg-cyan-800 items-center text-white`, {
       "justify-between": isLoggedIn,
       "justify-center": !isLoggedIn
     })}>
@@ -45,10 +45,9 @@ export function Header({ pageName, isLoggedIn = true }: Props) {
        </>
       ): (
         <span className="font-bold">CCMI - Credit Card Installment Management</span>
-
       )}
 
-    </header>
+    </div>
   );
 }
 

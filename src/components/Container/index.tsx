@@ -1,6 +1,5 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import Header from "../Header";
-import classNames from "classnames";
 import { Pages } from "@/types/pages";
 
 type Props = {
@@ -11,8 +10,10 @@ type Props = {
 }
 
 export default function Container({ pageName = "", hScreen = true, children, isLoggedIn }: Props) {
+  const [isScrollActive, setIsScrollActive] = useState(false);
+  
   return (
-    <div className="bg-gray-200 h-full flex flex-col">
+    <div className="bg-gray-200 min-h-full flex flex-col">
         <Header pageName={pageName} isLoggedIn={isLoggedIn} />
         <div className="px-16 pt-10 h-full">
             { children }
