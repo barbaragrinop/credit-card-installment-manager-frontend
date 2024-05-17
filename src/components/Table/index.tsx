@@ -1,88 +1,130 @@
-import { AccessorKeyColumnDef, createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
-import { useMemo, useState } from "react"
-import TableResizer from "./components/table-resizer"
+import {  ColumnDef, flexRender, getCoreRowModel, getFilteredRowModel, useReactTable } from "@tanstack/react-table"
+import { useState } from "react"
+import { TableComponents } from "./components"
+import { Field } from "../Field"
+import { purchasesMock } from "@/utils/mock-data"
+import { Purchase } from "@/types/purchase"
 
-type User = {
-    firstName: string
-    lastName: string
-    age: number
-    visits: number
-    progress: number
-    status: string
-}
+type Props<T> = {
+    columns: ColumnDef<T, any>[], 
+    data: T[]
+};
 
-const DATA: User[] = [
-    {
-        firstName: "Tanner",
-        lastName: "Linsley",
-        age: 33,
-        visits: 100,
-        progress: 50,
-        status: "Married"
-    },
-    {
-        firstName: "Kevin",
-        lastName: "Vandy",
-        age: 27,
-        visits: 200,
-        progress: 100,
-        status: "Single"
-    }
-]
-
-const columns = [
+const columns: ColumnDef<Purchase, any>[] = [
     {
         accessorKey: 'firstName',
-        header: 'First Name',
+        header: 'descrição',
         cell: (info: any) => info.getValue()
     },
     {
-        accessorKey: 'lastname',
-        header: 'Last Name',
-        cell: (info: any) => info.getValue()
+        accessorKey: 'jan',
+        header: 'jan',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
     },
     {
-        accessorKey: 'age',
-        header: 'Age',
-        cell: (info: any) => info.getValue()
+        accessorKey: 'fev',
+        header: 'fev',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
     },
     {
-        accessorKey: 'status',
-        header: 'Status',
-        cell: (info: any) => info.getValue()
-    }
+        accessorKey: 'mar',
+        header: 'mar',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },  
+    {
+        accessorKey: 'abr',
+        header: 'abr',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },
+    {
+        accessorKey: 'mai',
+        header: 'mai',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },
+    {
+        accessorKey: 'jun',
+        header: 'jun',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },
+    {
+        accessorKey: 'jul',
+        header: 'jul',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },
+    {
+        accessorKey: 'ago',
+        header: 'ago',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },
+    {
+        accessorKey: 'set',
+        header: 'set',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },
+    {
+        accessorKey: 'out',
+        header: 'out',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },
+    {
+        accessorKey: 'nov',
+        header: 'nov',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },
+    {
+        accessorKey: 'dez',
+        header: 'dez',
+        cell: (info: any) => (
+            <Field.Checkbox id="desc"  label="" name="desc" />
+        )
+    },
 ]
 
-function Table() {
+function Table<T>({ columns, data }: Props<T>) {
 
-    const [data, setData] = useState<User[]>(DATA);
-
-    const columnHelper = createColumnHelper<User>();
-
-    const columns: AccessorKeyColumnDef<User, string>[] = useMemo(() => {
-        return [
-            columnHelper.accessor('firstName', {
-                cell: info => info.getValue(),
-
-            }),
-            columnHelper.accessor('lastName', {
-                cell: info => info.getValue(),
-                footer: info => info.column.id,
-            })
-        ]
-    }, [])
+    const [columnFilters, setColumnFilters] = useState([])
 
     const { getHeaderGroups, getRowModel, getTotalSize } = useReactTable({
         columns,
         data,
         getCoreRowModel: getCoreRowModel(),
-        columnResizeMode: "onChange"
+        columnResizeMode: "onChange",
+        state: {
+            columnFilters
+        },
+        getFilteredRowModel: getFilteredRowModel()
     })
 
     return (
         <div className="p-2">
-            <table width={getTotalSize()}>
-                <thead className="">
+            <TableComponents.Filters 
+                setColumnFilters={setColumnFilters}
+            />
+
+            <table width={getTotalSize()} className="w-full mt-7">
+                <thead >
                     {getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id} >
                             {headerGroup.headers.map(header => (
@@ -92,7 +134,7 @@ function Table() {
                                         header.getContext()
                                     )}
 
-                                    <TableResizer 
+                                    <TableComponents.Resizer 
                                         isResizing={header.column.getIsResizing()}
                                         onMouseDown={header.getResizeHandler()}
                                         onTouchStart={header.getResizeHandler()}
@@ -106,14 +148,17 @@ function Table() {
                 <tbody>
                     {getRowModel().rows.map(row => (
                         <tr key={row.id} className="border border-gray-900">
-                            {row.getVisibleCells().map(cell => (
-                                <td key={cell.id} className="border border-gray-900" style={{ width: cell.column.getSize() }}>
+                            {row.getVisibleCells().map(cell => {
+                                console.log('cell', cell)
+                                return (
+                                    <td key={cell.id} className="border border-gray-900" style={{ width: cell.column.getSize() }}>
                                     {flexRender(
                                         cell.column.columnDef.cell,
                                         cell.getContext()
                                     )}
                                 </td>
-                            ))}
+                                )
+                            })}
                         </tr>
                     ))}
                 </tbody>
