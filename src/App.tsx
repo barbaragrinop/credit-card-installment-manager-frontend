@@ -2,6 +2,7 @@ import LoginPage from "@/pages/login";
 import HomePage from "@/pages/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./pages/error";
+import CartoesPage from "./pages/Cards";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <ErrorPage />
+  }, 
+  {
+    path: "/cartoes",
+    element: <CartoesPage />
   }
 ])
 

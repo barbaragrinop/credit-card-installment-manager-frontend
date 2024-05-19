@@ -26,7 +26,6 @@ export default function TableFilters({ setColumnFilters }: Props) {
         onChange={(e) => onFilterChange('firstName', e.target.value)}
       />
       <div className="relative">
-      {/* <TableFilterPopover /> */}
 
       </div>
     </div>

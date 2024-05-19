@@ -1,18 +1,25 @@
+export const selectFilterHomeValues = {
+    entredatas: "entredatas",
+    porcartao: "porcartao",
+    porloja: "porloja",
+    porproduto: "porproduto"
+}
+
 export const selectHomeOptions: { label: string, value: string }[] = [
     {
         label: "Entre datas",
-        value: "entredatas"
+        value: selectFilterHomeValues.entredatas
     },
     {
         label: "Por cartão",
-        value: "porcartao"
+        value: selectFilterHomeValues.porcartao
     },
     {
         label: "Por loja",
-        value: "porloja"
+        value: selectFilterHomeValues.porloja
     },
     {
         label: "Por produto",
-        value: "porproduto"
+        value: selectFilterHomeValues.porproduto
     }
 ]

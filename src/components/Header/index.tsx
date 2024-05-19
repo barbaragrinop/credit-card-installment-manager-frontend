@@ -24,17 +24,17 @@ export function Header({ pageName, isLoggedIn = true }: Props) {
           <li key="Dashboard" className={classNames({
             'font-bold': pageName === "Dashboard"
           })}>
-            <a href="">Dashboard</a>
+            <a href="/dashboard">Dashboard</a>
           </li>
           <li key="Cartões" className={classNames({
             'font-bold': pageName === "Cartões"
           })}>
-            <a href="">Cartões</a>
+            <a href="/cartoes">Cartões</a>
           </li>
           <li key="Perfil" className={classNames({
             'font-bold': pageName === "Perfil"
           })}>
-            <a href="">Perfil</a>
+            <a href="/perfil">Perfil</a>
           </li>
           <li key="Sair" className={classNames({
             'font-bold': pageName === "Sair"
