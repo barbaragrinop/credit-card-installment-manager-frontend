@@ -16,27 +16,27 @@ export function Header({ pageName, isLoggedIn = true }: Props) {
         <>
         <span className="font-extrabold">CCIM</span>
         <ul className="flex gap-10">
-          <li className={classNames({
+          <li key="Home"  className={classNames({
             'font-bold': pageName === "Home"
           })}>
             <a href="">Home</a>
           </li>
-          <li className={classNames({
+          <li key="Dashboard" className={classNames({
             'font-bold': pageName === "Dashboard"
           })}>
             <a href="">Dashboard</a>
           </li>
-          <li className={classNames({
+          <li key="Cartões" className={classNames({
             'font-bold': pageName === "Cartões"
           })}>
             <a href="">Cartões</a>
           </li>
-          <li className={classNames({
+          <li key="Perfil" className={classNames({
             'font-bold': pageName === "Perfil"
           })}>
             <a href="">Perfil</a>
           </li>
-          <li className={classNames({
+          <li key="Sair" className={classNames({
             'font-bold': pageName === "Sair"
           })}>
             <a href="">Sair</a>

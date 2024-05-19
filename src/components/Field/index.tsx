@@ -198,11 +198,15 @@ function Select({ id = uuidV4(), name, label, onChange, options, ...rest }: Sele
     setFocused(prevFocused => !prevFocused);
   }, []);
 
-  const handleOptionClick = useCallback((label: string) => {
+  const handleOptionClick = useCallback((label: string, value: string) => {
     setInputValue(label);
     setHasValue(true);
     setFocused(false);
-  }, []);
+
+    if (onChange) {
+      onChange({ value: value, label: label, id: id, name: name } as any);
+    }
+  }, [onChange, name]);
 
   return (
     <div className="flex flex-col w-full relative">
@@ -231,7 +235,7 @@ function Select({ id = uuidV4(), name, label, onChange, options, ...rest }: Sele
               <li
                 key={value}
                 className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
-                onMouseDown={() => handleOptionClick(label)}
+                onMouseDown={() => handleOptionClick(label, value)}
               >
                 {label}
               </li>
