@@ -4,6 +4,7 @@ import { Field } from "@/components/Field";
 import Table from "@/components/Table";
 import TableMonthColumn from "@/components/Table/components/table-month-column";
 import {  Installment } from "@/types/purchase";
+import { selectHomeOptions } from "@/utils/filter-select-home-options";
 import { purchasesMock } from "@/utils/mock-data";
 import { useState } from "react";
 
@@ -29,6 +30,18 @@ function HomePage() {
             <Button.Primary type="submit">Salvar</Button.Primary>
           </div>
         </form>
+        <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
+          <span>Filtro:</span> 
+          <div className="w-[200px]">
+            <Field.Select 
+              id="Select" 
+              label="Select" 
+              name="Select" 
+              options={selectHomeOptions}
+            />
+
+          </div>
+
         <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
 
         {
@@ -147,7 +160,7 @@ function HomePage() {
                   cell: ({ cell }) => {
                     return (
                       <div className="items-center justify-center" key={`${cell.id}-${cell.column}`} >
-                        <Field.Checkbox id="desc" defaultChecked={cell.getValue()} label="" name="desc" />
+                        <Field.Checkbox id="description" defaultChecked={cell.getValue()} label="" name="desc" />
                       </div>
                     )
                   }

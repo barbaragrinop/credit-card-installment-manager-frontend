@@ -27,7 +27,6 @@ function Table<T>({ columns, data, filterActive }: Props<T>) {
     return (
         <div className="p-2">
             {filterActive && (
-
                 <TableComponents.Filters
                     setColumnFilters={setColumnFilters}
                 />
@@ -43,7 +42,6 @@ function Table<T>({ columns, data, filterActive }: Props<T>) {
                                         header.column.columnDef.header,
                                         header.getContext()
                                     )}
-
                                     <TableComponents.Resizer
                                         isResizing={header.column.getIsResizing()}
                                         onMouseDown={header.getResizeHandler()}

@@ -12,7 +12,7 @@ function LoginPage() {
                 <h1 className="text-center">Login</h1>
                 <div className=" flex justify-center items-center">
                     <form className="flex flex-col gap-3  w-72 items-end">
-                        <Field.Text name="email" id="email" label="E-mail" />
+                        <Field.Text name="email" id="email" label="E-mail"/>
                         <Field.Text name="password" id="password" label="Password" type="password" />
 
                         <Button.Primary
