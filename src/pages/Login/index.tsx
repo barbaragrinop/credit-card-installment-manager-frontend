@@ -1,10 +1,11 @@
 import { Button } from "@/components/Button";
 import Container from "@/components/Container";
 import { Field } from "@/components/Field";
+import { useAuth } from "@/hooks/useAuth";
 import { LoginFormsInput } from "@/types/login-forms-input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { object, string } from 'yup';
 
 const validation = object().shape({
@@ -13,6 +14,8 @@ const validation = object().shape({
 })
 
 function LoginPage() {
+  const { login } = useAuth();
+  const navigate = useNavigate()
   const { handleSubmit, 
     register, 
     getValues,
@@ -29,8 +32,16 @@ function LoginPage() {
   // const navigate = useNavigate();
 
   function handleLogin(form: LoginFormsInput) {
-    console.log(form)
+    let result = login(form.email, form.password)
+
+    if(result) {
+      navigate('/home')
+    }
+
+    console.log('form', form)
   }
+
+  
   return (
     <Container isLoggedIn={false}>
       <div className="h-full flex flex-col justify-center">
@@ -42,7 +53,7 @@ function LoginPage() {
             {errors && errors.email && <small className="text-red-500">{errors.email.message}</small>}
             <Field.Text id="password" name="password" label="Password" type="password" register={register("password")} />
             {errors && errors.password && <small className="text-red-500">{errors.password.message}</small>}
-            <Button.Primary type="submit" onClick={() => console.log(getValues())}>Entrar</Button.Primary>
+            <Button.Primary type="submit">Entrar</Button.Primary>
           </form>
         </div>
       </div>

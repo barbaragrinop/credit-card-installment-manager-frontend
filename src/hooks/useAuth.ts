@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export function useAuth(){
+export function useAuth() {
 
-    function login(email: string, password: string){
+    function login(email: string, password: string): boolean {
         let environment: string = import.meta.env.BASE_URL;
         console.log('environment', environment)
 
@@ -10,5 +10,19 @@ export function useAuth(){
             email,
             password
         })
+
+        if (!result) {
+            return false
+        }
+
+        console.log('result', result)
+
+        return true;
+
+    }
+
+
+    return {
+        login
     }
 }
