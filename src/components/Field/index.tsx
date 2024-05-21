@@ -1,118 +1,109 @@
 import { ChangeEvent, InputHTMLAttributes, useCallback, useState } from "react"
 import classNames from 'classnames';
 import { RiArrowDownSLine } from "react-icons/ri";
-import { v4 as uuidV4 } from 'uuid'
+import { v4 as uuidV4 } from 'uuid';
+import {  UseFormRegisterReturn } from "react-hook-form";
 
-export type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
-  id: string
-  name: string
-  label: string
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
+  label: string;
+  placeholder?: string;
+  name:string;
+  register: UseFormRegisterReturn;
 }
 
-function Text({ id = uuidV4(), name, label, onChange, ...rest }: FieldProps) {
-  const [focused, setFocused] = useState<boolean>(false)
-  const [hasValue, setHasValue] = useState<boolean>(false);
-
-  const handleFocus = useCallback(() => {
-    setFocused(true);
-  }, [])
-
-  const handleBlur = useCallback(() => {
-    setFocused(false);
-  }, [])
-
-  const handleChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
-    const currentValue = ev.target.value;
-    setHasValue(currentValue.length > 0);
-
-    if (onChange) {
-      onChange(ev);
-    }
-  }, [])
-
+function Text({ id, name,  label, placeholder = " ", register, ...rest }: FieldProps) {
   return (
-    <div className="flex flex-col w-full relative">
-      <label htmlFor={id} className={classNames('absolute left-2 transition-all', {
-        'top-[-6px] text-xs text-cyan-800 px-1 bg-white': focused || hasValue,
-        'top-3 text-sm text-gray-500 px-2': !focused,
-      })}>
-        {label}
-      </label>
-      <input type="text"
-        id={id}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        name={name}
-        className="pl-4 px-2 py-2 border rounded focus:outline-none focus:border-cyan-800 text-gray-800"
+    <div className="relative w-full">
+      <input
+        className={classNames(
+          "block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm",
+          "text-gray-900 bg-gray-50 dark:bg-gray-700 border-0",
+          "border-b-2 border-gray-300 appearance-none dark:text-white",
+          "dark:border-gray-600 dark:focus:border-cyan-800",
+          " focus:outline-none focus:ring-0 focus:border-cyan-800 peer"
+        )}
+        // ref={ref}
+        placeholder={placeholder}
+        {...register}
         {...rest}
       />
+      <label htmlFor={id}
+        className={classNames(
+          "absolute text-sm text-gray-500 dark:text-gray-400",
+          "duration-300 transform -translate-y-4 scale-75 top-4 z-10",
+          "origin-[0] start-2.5 peer-focus:text-cyan-800",
+          "peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100",
+          "peer-placeholder-shown:translate-y-0 peer-focus:scale-75",
+          "peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4",
+          "rtl:peer-focus:left-auto"
+        )}>{label}</label>
+    </div>
+
+  );
+}
+
+
+function Number({ id, name,  label, placeholder = " ", register, ...rest }: FieldProps) {
+  return (
+    <div className="relative w-full">
+      <input
+        type="number"
+        id={id}
+        className={classNames(
+          "block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm",
+          "text-gray-900 bg-gray-50 dark:bg-gray-700 border-0",
+          "border-b-2 border-gray-300 appearance-none dark:text-white",
+          "dark:border-gray-600 dark:focus:border-cyan-800",
+          " focus:outline-none focus:ring-0 focus:border-cyan-800 peer"
+        )}
+        placeholder={placeholder}
+        {...rest}
+      />
+      <label htmlFor={id}
+        className={classNames(
+          "absolute text-sm text-gray-500 dark:text-gray-400",
+          "duration-300 transform -translate-y-4 scale-75 top-4 z-10",
+          "origin-[0] start-2.5 peer-focus:text-cyan-800",
+          "peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100",
+          "peer-placeholder-shown:translate-y-0 peer-focus:scale-75",
+          "peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4",
+          "rtl:peer-focus:left-auto"
+        )}>{label}</label>
     </div>
   )
 }
 
-function Number({ id = uuidV4(), name, label, onChange, ...rest }: FieldProps) {
-  const [focused, setFocused] = useState<boolean>(false)
-  const [hasValue, setHasValue] = useState<boolean>(false);
-
-
-  const handleFocus = useCallback(() => {
-    setFocused(true);
-  }, [])
-
-  const handleBlur = useCallback(() => {
-    setFocused(false);
-  }, [])
-
-
-  const handleChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
-    const currentValue = ev.target.value;
-    setHasValue(currentValue.length > 0);
-
-    if (onChange) {
-      onChange(ev);
-    }
-  }, [])
-
+function Date({ id, name,  label, placeholder = " ", register, ...rest }: FieldProps) {
   return (
-    <div className="flex flex-col w-full relative">
-      <label htmlFor={id} className={classNames('absolute left-2 transition-all', {
-        'top-[-6px] text-xs text-cyan-800 px-1 bg-white': focused || hasValue,
-        'top-3 text-sm text-gray-500 px-2': !focused,
-      })}>
-        {label}
-      </label>
-      <input type="text"
+    <div className="relative w-full">
+      <input
+        type="date"
         id={id}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        name={name}
-        className="pl-4 px-2 py-2 border rounded focus:outline-none focus:border-cyan-800 text-gray-800"
+        className={classNames(
+          "block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm",
+          "text-gray-900 bg-gray-50 dark:bg-gray-700 border-0",
+          "border-b-2 border-gray-300 appearance-none dark:text-white",
+          "dark:border-gray-600 dark:focus:border-cyan-800",
+          " focus:outline-none focus:ring-0 focus:border-cyan-800 peer"
+        )}
+        placeholder={placeholder}
         {...rest}
       />
+      <label htmlFor={id}
+        className={classNames(
+          "absolute text-sm text-gray-500 dark:text-gray-400",
+          "duration-300 transform -translate-y-4 scale-75 top-4 z-10",
+          "origin-[0] start-2.5 peer-focus:text-cyan-800",
+          "peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100",
+          "peer-placeholder-shown:translate-y-0 peer-focus:scale-75",
+          "peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4",
+          "rtl:peer-focus:left-auto"
+        )}>{label}</label>
     </div>
   )
 }
 
-function Date({ id = uuidV4(), name, label, onChange, ...rest }: FieldProps) {
-  return (
-    <div className="flex flex-col w-full relative">
-      <label htmlFor={id} className="absolute left-2 transition-all top-[-6px] text-xs text-cyan-800 px-1 bg-white">
-        {label}
-      </label>
-      <input type="date"
-        id={id}
-        name={name}
-        className="pl-4 px-2 py-2 border rounded focus:outline-none focus:border-cyan-800 text-gray-800"
-        {...rest}
-      />
-    </div>
-  )
-}
-
-function Checkbox({ id = uuidV4(), name, label, ...rest }: FieldProps) {
+function Checkbox({ id, name,  label, placeholder = " ", register, ...rest }: FieldProps) {
   return (
     <div className="inline-flex items-center">
       <label className="relative flex items-center p-3 rounded-full cursor-pointer"
@@ -162,6 +153,7 @@ function Checkbox({ id = uuidV4(), name, label, ...rest }: FieldProps) {
 
 type SelectProps = FieldProps & {
   options: { label: string, value: string }[]
+  
 }
 
 function Select({ id = uuidV4(), name, label, onChange, options, ...rest }: SelectProps) {

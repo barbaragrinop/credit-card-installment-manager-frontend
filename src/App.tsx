@@ -1,4 +1,4 @@
-import LoginPage from "@/pages/login";
+import LoginPage from "@/pages/Login";
 import HomePage from "@/pages/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./pages/error";

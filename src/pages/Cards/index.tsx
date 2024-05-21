@@ -3,7 +3,7 @@ import Container from "@/components/Container"
 import { Field } from "@/components/Field"
 import Table from "@/components/Table"
 import { CreditCard } from "@/types/credit-card"
-import { format, parse } from "date-fns"
+import { format } from "date-fns"
 import { BiEdit, BiTrash } from "react-icons/bi"
 
 const data: CreditCard[] = [
@@ -67,7 +67,7 @@ function CartoesPage() {
             {
               header: 'Ações',
               accessorKey: 'actions',
-              cell: ({ cell }) => {
+              cell: () => {
                 return (
                   <div className="flex gap-4 justify-center">
                     <BiTrash className="border text-3xl p-1 rounded bg-cyan-800 cursor-pointer text-white" />
