@@ -18,7 +18,13 @@ function LoginPage() {
     getValues,
     formState: {
       errors
-    } } = useForm<LoginFormsInput>({ resolver: yupResolver(validation) });
+    } } = useForm<LoginFormsInput>({ 
+      resolver: yupResolver(validation), 
+      defaultValues: {
+        email: "",
+        password: "",
+      }
+    });
 
   // const navigate = useNavigate();
 
