@@ -2,16 +2,16 @@ import { ChangeEvent, InputHTMLAttributes, useCallback, useState } from "react"
 import classNames from 'classnames';
 import { RiArrowDownSLine } from "react-icons/ri";
 import { v4 as uuidV4 } from 'uuid';
-import {  UseFormRegisterReturn } from "react-hook-form";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   placeholder?: string;
-  name:string;
+  name: string;
   register: UseFormRegisterReturn;
 }
 
-function Text({ id, name,  label, placeholder = " ", register, ...rest }: FieldProps) {
+function Text({ id, name, label, placeholder = " ", register, ...rest }: FieldProps) {
   return (
     <div className="relative w-full">
       <input
@@ -43,7 +43,7 @@ function Text({ id, name,  label, placeholder = " ", register, ...rest }: FieldP
 }
 
 
-function Number({ id, name,  label, placeholder = " ", register, ...rest }: FieldProps) {
+function Number({ id, name, label, placeholder = " ", register, ...rest }: FieldProps) {
   return (
     <div className="relative w-full">
       <input
@@ -57,6 +57,7 @@ function Number({ id, name,  label, placeholder = " ", register, ...rest }: Fiel
           " focus:outline-none focus:ring-0 focus:border-cyan-800 peer"
         )}
         placeholder={placeholder}
+        {...register}
         {...rest}
       />
       <label htmlFor={id}
@@ -73,7 +74,7 @@ function Number({ id, name,  label, placeholder = " ", register, ...rest }: Fiel
   )
 }
 
-function Date({ id, name,  label, placeholder = " ", register, ...rest }: FieldProps) {
+function Date({ id, name, label, placeholder = " ", register, ...rest }: FieldProps) {
   return (
     <div className="relative w-full">
       <input
@@ -87,6 +88,7 @@ function Date({ id, name,  label, placeholder = " ", register, ...rest }: FieldP
           " focus:outline-none focus:ring-0 focus:border-cyan-800 peer"
         )}
         placeholder={placeholder}
+        {...register}
         {...rest}
       />
       <label htmlFor={id}
@@ -103,15 +105,15 @@ function Date({ id, name,  label, placeholder = " ", register, ...rest }: FieldP
   )
 }
 
-function Checkbox({ id, name,  label, placeholder = " ", register, ...rest }: FieldProps) {
+function Checkbox({ id, name, label, placeholder = " ", register, ...rest }: FieldProps) {
   return (
     <div className="inline-flex items-center">
       <label className="relative flex items-center p-3 rounded-full cursor-pointer"
         htmlFor={id}>
         <input type="checkbox"
           id={id}
-          name={name}
           {...rest}
+          {...register}
           className="before:content[''] peer relative h-4 w-4 
             cursor-pointer appearance-none rounded-md 
             border 
@@ -153,7 +155,7 @@ function Checkbox({ id, name,  label, placeholder = " ", register, ...rest }: Fi
 
 type SelectProps = FieldProps & {
   options: { label: string, value: string }[]
-  
+
 }
 
 function Select({ id = uuidV4(), name, label, onChange, options, ...rest }: SelectProps) {
@@ -215,7 +217,7 @@ function Select({ id = uuidV4(), name, label, onChange, options, ...rest }: Sele
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}
-
+        
         name={name}
         className="pl-4 px-2 py-2 border rounded pr-8 focus:outline-none focus:border-cyan-800 text-gray-800"
         {...rest}

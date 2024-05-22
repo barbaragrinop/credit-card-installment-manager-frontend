@@ -35,7 +35,7 @@ const data: CreditCard[] = [
 
 ]
 
-function CartoesPage() {
+function CardsPage() {
   return (
     <Container pageName="Cartões" hScreen>
       <div className="min-h-full flex flex-col bg-gray-100 rounded p-4">
@@ -83,4 +83,4 @@ function CartoesPage() {
   )
 }
 
-export default CartoesPage
+export default CardsPage
