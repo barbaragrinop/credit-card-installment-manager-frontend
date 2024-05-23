@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/useAuth";
 import { headerHeight } from "@/types/consts";
 import { Pages } from "@/types/pages";
 import classNames from "classnames";

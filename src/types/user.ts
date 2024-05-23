@@ -1,8 +1,8 @@
 
 export type User = {
-    id: number
-    firstName: string
-    lastName: string
-    age: number
-    isActive: boolean
+    email: string;
+    password: string;
+    confirmPassword: string;
+    birth_date: Date;
+    name: string;
 }

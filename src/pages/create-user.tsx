@@ -9,26 +9,32 @@ import axios from 'axios';
 import { ToastContainer } from "react-toastify";
 import { useNotifier } from "@/hooks/useNotifier";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 type CreateUser = {
     email: string;
     password: string;
     confirmPassword: string;
-    birthDate: Date;
+    birth_date: string;
     name: string;
 }
 
 const validation = object().shape({
-    email: string().email("Must be a valid e-mail").required("E-mail is required"),
-    password: string().required("Password is required"),
-    birthDate: date().required("Birth Date is required").max(new Date(), "Birth Date must be in the past"),
-    name: string().required("Name is required"),
-    confirmPassword: string().required("Confirm Password is required").oneOf([ref('password'), ""], 'Passwords must match')
+    email: string().email("Insira um e-mail válido").required("Campo obrigatório"),
+    password: string().required("Campo obrigatório"),
+    birth_date: string().required("Campo obrigatório"),
+    name: string().required("Campo obrigatório"),
+    confirmPassword: string().required("Campo obrigatório").oneOf([ref('password'), ""], 'As senhas devem ser iguais')
 })
 
 function CreateUserPage() {
     const { success, error } = useNotifier()
     const navigate = useNavigate();
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            navigate('/home')
+        }
+    })
 
     const {
         handleSubmit,
@@ -40,21 +46,41 @@ function CreateUserPage() {
             isSubmitting,
         } } = useForm<CreateUser>({
             resolver: yupResolver(validation),
-            mode: 'onChange'
+            mode: 'onChange',
+            defaultValues: {
+                email: "",
+                password: "",
+                confirmPassword: "",
+                name: "",
+                birth_date: ""
+            }
         });
 
     async function handleRegisterUser(form: Omit<CreateUser, "confirmPassword">) {
-        try {
-            let result = await axios.post(`${import.meta.env.VITE_ENVIRONMENT}/user`, form)
 
-            if (result.status === 201) {
-                success('Usuário criado com sucesso!')
-            }
+        const { birth_date, email, name, password } = form;
 
-        } catch (err: any) {
-            console.log('error', err?.response?.data)
-            error(err?.response?.data || '');
+        if (!birth_date || !email || !name || !password) {
+            error('Preencha todos os campos')
+            return
         }
+
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_ENVIRONMENT}/user`, {
+                birth_date,
+                email,
+                name,
+                password
+            })
+
+            if (response.status === 201) {
+                success('Usuário cadastrado com sucesso')
+                navigate('/')
+            }
+        } catch (err) {
+            error('Erro ao cadastrar usuário')
+        }
+
     }
 
     return (
@@ -67,8 +93,8 @@ function CreateUserPage() {
                         <Field.Text id="name" name="name" label="Name" type="text" register={register("name")} />
                         <FieldErrorMessage error={errors} field="name" />
 
-                        <Field.Date id="birthDate" name="birthDate" label="Data de Nascimento" register={register("birthDate")} />
-                        <FieldErrorMessage error={errors} field="birthDate" />
+                        <Field.Date id="birth_date" name="birth_date" label="Data de Nascimento" register={register("birth_date")} />
+                        <FieldErrorMessage error={errors} field="birth_date" />
 
                         <Field.Text id="email" name="email" label="E-mail" type="text" register={register("email")} />
                         <FieldErrorMessage error={errors} field="email" />
@@ -79,7 +105,9 @@ function CreateUserPage() {
                         <Field.Text id="confirmPassword" name="confirmPassword" label="Confirme a senha" type="password" register={register("confirmPassword")} />
                         <FieldErrorMessage error={errors} field="confirmPassword" />
 
-                        <Button.Primary type="submit" onClick={() => console.log("getvaIUS", getValues())}>Cadastrar</Button.Primary>
+                        <Button.Primary type="submit"
+                            disabled={isSubmitting}
+                        >Cadastrar</Button.Primary>
                         <Button.Primary type="submit" onClick={() => navigate("/")}>Voltar</Button.Primary>
                     </form>
                 </div>

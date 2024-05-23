@@ -1,8 +1,11 @@
 import { Button } from "@/components/Button";
 import Container from "@/components/Container";
 import { Field } from "@/components/Field";
+import { useAuth } from "@/context/useAuth";
+import { useNotifier } from "@/hooks/useNotifier";
 import { LoginFormsInput } from "@/types/login-forms-input";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { object, string } from 'yup';
@@ -14,10 +17,10 @@ const validation = object().shape({
 
 function LoginPage() {
   const { login } = useAuth();
+  const { error } = useNotifier()
   const navigate = useNavigate()
   const { handleSubmit, 
     register, 
-    getValues,
     formState: {
       errors
     } } = useForm<LoginFormsInput>({ 
@@ -28,19 +31,24 @@ function LoginPage() {
       }
     });
 
+    useEffect(() => {
+      if(localStorage.getItem('token')) {
+        navigate('/home')
+      }
+    })
+
   // const navigate = useNavigate();
 
+
   async function handleLogin(form: LoginFormsInput) {
-    let result = await login(form.email, form.password)
-    console.log('resultasdasd', result)
-
-    // if(result) {
-    //   navigate('/home')
-    // }
-
-    console.log('form', form)
+    try {
+      await login(form.email, form.password);
+      navigate('/home'); // Navigate to home on successful login
+    } catch (err: any) {
+      error("Invalid email or password");
+    }
   }
-
+  
   
   return (
     <Container>
