@@ -5,7 +5,6 @@ import { useAuth } from "@/context/useAuth";
 import { useNotifier } from "@/hooks/useNotifier";
 import { LoginFormsInput } from "@/types/login-forms-input";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { object, string } from 'yup';
@@ -16,28 +15,28 @@ const validation = object().shape({
 })
 
 function LoginPage() {
-  const { login } = useAuth();
+  const { login, isLoggedIn } = useAuth();
   const { error } = useNotifier()
   const navigate = useNavigate()
-  const { handleSubmit, 
-    register, 
+  const { handleSubmit,
+    register,
     formState: {
       errors
-    } } = useForm<LoginFormsInput>({ 
-      resolver: yupResolver(validation), 
+    } } = useForm<LoginFormsInput>({
+      resolver: yupResolver(validation),
       defaultValues: {
         email: "",
         password: "",
       }
     });
 
-    useEffect(() => {
-      if(localStorage.getItem('token')) {
-        navigate('/home')
-      }
-    })
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (token) {
+  //     navigate('/home')
+  //   }
+  // }, [navigate])
 
-  // const navigate = useNavigate();
 
 
   async function handleLogin(form: LoginFormsInput) {
@@ -48,8 +47,8 @@ function LoginPage() {
       error("Invalid email or password");
     }
   }
-  
-  
+
+
   return (
     <Container>
       <div className="h-full flex flex-col justify-center">
@@ -64,7 +63,6 @@ function LoginPage() {
             <Button.Primary type="submit">Entrar</Button.Primary>
             <Button.Primary type="submit" onClick={() => {
               navigate('/create-user')
-            
             }}>Cadastrar</Button.Primary>
           </form>
         </div>

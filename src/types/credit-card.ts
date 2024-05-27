@@ -1,5 +1,6 @@
-export type CreditCard = {
+export type Card = {
     id: number;
     name: string;
-    dtVencimento: string;
+    dueDay: string
+    cardBrand: string;
 }

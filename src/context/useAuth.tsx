@@ -1,11 +1,12 @@
-import { useNotifier } from "@/hooks/useNotifier";
 import { User } from "@/types/user";
 import axios from "axios";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+
+type UserJWT = Omit<User, "password" | "confirmPassword" > | null;
 
 type UserContextT = {
-    user: User | null;
+    user: UserJWT
     token: string | null;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
@@ -19,22 +20,27 @@ type Props = {
 }
 
 export function UserProvider({ children }: Props) {
-    const [user, setUser] = useState<User | null>(null)
     const [token, setToken] = useState<string | null>(null)
+    const [user, setUser] = useState<UserJWT | null>(null)
     const [isReady, setIsReady] = useState<boolean>(false)
     let environment: string = import.meta.env.VITE_ENVIRONMENT;
-    const { error } = useNotifier()
 
     useEffect(() => {
-        const user = localStorage.getItem("user")
         const token = localStorage.getItem("token")
 
-        if (user && token) {
-            setUser(JSON.parse(user))
+        setIsReady(true)
+
+        if (token) {
             setToken(token)
+            const decoded: any = jwtDecode(token);
+            setUser({
+                email: decoded.email,
+                id: decoded.id,
+                name: decoded.name,
+                birth_date: new Date(decoded.birth_date)
+            })
         }
 
-        setIsReady(true)
     }, [])
 
     async function login(email: string, password: string) {
@@ -44,32 +50,35 @@ export function UserProvider({ children }: Props) {
             password
         })
 
-        error("E-mail ou senha inválidos")
-        
+        if (result?.data?.token) {
+            const { token } = result.data
+            const decoded: any = jwtDecode(token);
 
-        if(result?.data){
-            const { user, token } = result.data
-            setUser(user)
+            localStorage.setItem("token", token)
+            
+            const userData: UserJWT = {
+                id: decoded.id,
+                name: decoded.name,
+                email: decoded.sub,
+                birth_date: new Date(decoded.birth_date)
+            }
+
             setToken(token)
-            localStorage.setItem("user", JSON.stringify(user))
-            localStorage
+            setUser(userData)
         }
-
     }
 
     function logout() {
-        localStorage.removeItem("user")
         localStorage.removeItem("token")
-        setUser(null)
         setToken(null)
     }
 
-    const isLoggedIn = user && token ? true : false
+    const isLoggedIn = token ? true : false
 
 
     return (
         <UserContext.Provider
-            value={{ login, user, token, logout, isLoggedIn }}
+            value={{ login, token, logout, isLoggedIn, user }}
         >
             {isReady ? children : null}
         </UserContext.Provider>

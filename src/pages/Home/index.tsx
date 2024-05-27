@@ -7,25 +7,63 @@ import { selectFilterHomeValues, selectHomeOptions } from "@/utils/filter-select
 import { purchasesMock } from "@/utils/mock-data";
 import { useState } from "react";
 import { useHomeTableColumn } from "./hooks/table-column.hook";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { object, string, number } from 'yup';
+import InstallmentsFilter from "./components/filter";
+
+type FormValues = {
+  loja: string;
+  product: string;
+  cartao: string;
+  qtdParcelas: number;
+  dtCompra: string;
+}
+
+const validation = object<FormValues>().shape({
+  loja: string().required("Campo obrigatório"),
+  product: string().required("Campo obrigatório"),
+  cartao: string().required("Campo obrigatório"),
+  qtdParcelas: number().required("Campo obrigatório"),
+  dtCompra: string().required("Campo obrigatório"),
+})
+
 
 function HomePage() {
   const { columns } = useHomeTableColumn();
   const [data, setData] = useState<Installment[]>(purchasesMock);
-  const [filterChosenOption, setFilterChosenOption] = useState<string>('');
+  const { handleSubmit,
+    register,
+    formState: {
+      errors
+    } } = useForm({
+      resolver: yupResolver<FormValues>(validation),
+      defaultValues: {
+        loja: "",
+        product: "",
+        cartao: "",
+        qtdParcelas: 0,
+        dtCompra: "",
+      }
+    });
+
+    function submitForm(values: FormValues) {
+      console.log(values)
+    }
 
   return (
-    <Container pageName="Home" hScreen>
+    <Container pageName="Home">
       <div className="min-h-full flex flex-col bg-gray-100 rounded p-4">
         <h1 className="text-3xl pb-12">
           Gerenciador de parcelas
         </h1>
-        <form >
+        <form onSubmit={handleSubmit(submitForm)}>
           <div className="grid grid-cols-3 gap-4">
-            <Field.Text name="loja" id="loja" label="Loja" />
-            <Field.Text name="product" id="product" label="Product" />
-            <Field.Text name="cartao" id="cartao" label="Cartão" />
-            <Field.Text name="qtdParcelas" id="qtdParcelas" label="Qtd. Parcelas" />
-            <Field.Date name="dtCompra" id="dtCompra" label="Data da compra" />
+            <Field.Text name="loja" id="loja" label="Loja" register={register("loja")} />
+            <Field.Text name="product" id="product" label="Product" register={register("product")} />
+            <Field.Text name="cartao" id="cartao" label="Cartão" register={register("cartao")} />
+            <Field.Text name="qtdParcelas" id="qtdParcelas" label="Qtd. Parcelas" register={register("qtdParcelas")} />
+            <Field.Date name="dtCompra" id="dtCompra" label="Data da compra" register={register("dtCompra")} />
           </div>
           <div className="flex gap-4 justify-end pt-6">
             <Button.Primary>Cancelar</Button.Primary>
@@ -33,63 +71,7 @@ function HomePage() {
           </div>
         </form>
         <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
-        <>
-          <div className="flex items-center gap-4 " >
-            <span className="font-bold">Filtro:</span>
-            <div className="w-[200px]">
-              <Field.Select
-                id="select"
-                label="Selecione o tipo"
-                name="select"
-                options={selectHomeOptions}
-                onChange={(e: any) => {
-                  setFilterChosenOption(e.value);
-                }}
-              />
-            </div>
-          </div>
-          {
-            filterChosenOption === selectFilterHomeValues.entredatas ? (
-              <fieldset className="border w-full flex gap-4 p-2">
-                <legend className="p-2">Insira a <strong>data de início</strong> e a <strong>data fim</strong></legend>
-
-                <Field.Date name="dtInicio" id="dtInicio" label="Data Início" />
-                <Field.Date name="dtFim" id="dtFim" label="Data Fim" />
-                <Button.Primary>
-                  Aplicar
-                </Button.Primary>
-              </fieldset>
-            ) : filterChosenOption === selectFilterHomeValues.porcartao ? (
-              <fieldset className="border w-full flex gap-4 p-2">
-                <legend className="p-2">Insira o <strong>nome do cartão</strong></legend>
-
-                <Field.Select name="cartao" id="cartao" label="Nome do Cartão" options={[{ label: "Cartão 1", value: "cartao1" }, { label: "Cartão 2", value: "cartao2" }]} />
-                <Button.Primary>
-                  Aplicar
-                </Button.Primary>
-              </fieldset>
-            ) : filterChosenOption === selectFilterHomeValues.porloja ? (
-              <fieldset className="border w-full flex gap-4 p-2">
-                <legend className="p-2">Insira o <strong>nome da loja</strong></legend>
-
-                <Field.Select name="loja" id="loja" label="Nome da loja" options={[{ label: "Loja 1", value: "loja1" }, { label: "Loja 2", value: "loja2" }]} />
-                <Button.Primary>
-                  Aplicar
-                </Button.Primary>
-              </fieldset>
-            ) : filterChosenOption === selectFilterHomeValues.porproduto ? (
-              <fieldset className="border w-full flex gap-4 p-2">
-                <legend className="p-2">Insira o <strong>nome do produto</strong></legend>
-
-                <Field.Select name="produto" id="produto" label="Nome do Produto" options={[{ label: "Produto 1", value: "produto1" }, { label: "Produto 2", value: "produto2" }]} />
-                <Button.Primary>
-                  Aplicar
-                </Button.Primary>
-              </fieldset>
-            ) : null
-          }
-        </>
-
+        <InstallmentsFilter />
         <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
 
 

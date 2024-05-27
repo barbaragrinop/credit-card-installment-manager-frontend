@@ -155,7 +155,6 @@ function Checkbox({ id, name, label, placeholder = " ", register, ...rest }: Fie
 
 type SelectProps = FieldProps & {
   options: { label: string, value: string }[]
-
 }
 
 function Select({ id = uuidV4(), name, label, onChange, options, ...rest }: SelectProps) {
