@@ -8,7 +8,7 @@ type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   placeholder?: string;
   name: string;
-  register: UseFormRegisterReturn;
+  register?: UseFormRegisterReturn;
 }
 
 function Text({ id, name, label, placeholder = " ", register, ...rest }: FieldProps) {

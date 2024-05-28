@@ -1,16 +1,16 @@
-import { Button } from "@/components/Button";
+import InstallmentsFilter from "./components/filter";
 import Container from "@/components/Container";
-import { Field } from "@/components/Field";
 import Table from "@/components/Table";
+
+import { Button } from "@/components/Button";
+import { Field } from "@/components/Field";
 import { Installment } from "@/types/purchase";
-import { selectFilterHomeValues, selectHomeOptions } from "@/utils/filter-select-home-options";
 import { purchasesMock } from "@/utils/mock-data";
 import { useState } from "react";
 import { useHomeTableColumn } from "./hooks/table-column.hook";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string, number } from 'yup';
-import InstallmentsFilter from "./components/filter";
 
 type FormValues = {
   loja: string;

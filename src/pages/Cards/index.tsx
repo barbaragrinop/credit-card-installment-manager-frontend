@@ -1,17 +1,15 @@
-import { Button } from "@/components/Button";
 import Container from "@/components/Container";
-import { Field } from "@/components/Field";
 import Table from "@/components/Table";
+import useSWR from 'swr';
+
+import { Button } from "@/components/Button";
+import { Field } from "@/components/Field";
 import { useAuth } from "@/context/useAuth";
 import { useHttpConfig } from "@/hooks/useHttpConfig";
 import { Card } from "@/types/credit-card";
-import { format } from "date-fns";
 import { useForm } from "react-hook-form";
-import { BiEdit, BiTrash } from "react-icons/bi";
-import useSWR from 'swr';
 import { useCardTableColumn } from "./hooks/cards-table-columns.hook";
 import { useNotifier } from "@/hooks/useNotifier";
-
 
 type FieldValues = {
   name: string;
@@ -25,33 +23,32 @@ function CardsPage() {
     handleSubmit,
     reset,
   } = useForm<FieldValues>();
+  
   const { api, fetcher } = useHttpConfig();
   const { user } = useAuth();
   const { columns } = useCardTableColumn()
   const { data, mutate } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/card/get-cards-by-userId?userId=${user?.id}`, fetcher)
   const { success, error } = useNotifier()
 
-
   async function submitForm(values: FieldValues) {
+    console.log('user', user)
     try {
-      const result = api({
+      await api({
         method: "POST",
         url: `${import.meta.env.VITE_ENVIRONMENT}/card`,
         data: {
           name: values.name,
           dueDay: values.dueDay,
           cardBrand: values.card_brand,
-          userEmail: user?.email,
+          userEmail: user!.email,
         },
       });
-      
-      console.log('result', result)
       
       mutate()
       reset()
       success("Cartão cadastrado com sucesso!")
     } catch (err) {
-      console.error(err);
+      console.error("err", err);
       error("Erro ao cadastrar cartão!")
     }
   }

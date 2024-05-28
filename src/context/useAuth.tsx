@@ -1,9 +1,9 @@
 import { User } from "@/types/user";
 import axios from "axios";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { jwtDecode, JwtPayload } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
-type UserJWT = Omit<User, "password" | "confirmPassword" > | null;
+type UserJWT = Omit<User, "password" | "confirmPassword"> | null;
 
 type UserContextT = {
     user: UserJWT
@@ -30,11 +30,13 @@ export function UserProvider({ children }: Props) {
 
         setIsReady(true)
 
-        if (token) {
-            setToken(token)
+        if (token) {    
+            setToken    
             const decoded: any = jwtDecode(token);
+
+
             setUser({
-                email: decoded.email,
+                email: decoded.sub,
                 id: decoded.id,
                 name: decoded.name,
                 birth_date: new Date(decoded.birth_date)
@@ -55,7 +57,7 @@ export function UserProvider({ children }: Props) {
             const decoded: any = jwtDecode(token);
 
             localStorage.setItem("token", token)
-            
+
             const userData: UserJWT = {
                 id: decoded.id,
                 name: decoded.name,

@@ -1,6 +1,5 @@
 import { Button } from "@/components/Button";
 import { Field } from "@/components/Field";
-import { FieldSelectOnEventProps } from "@/types/select";
 import { selectFilterHomeValues, selectHomeOptions } from "@/utils/filter-select-home-options";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
