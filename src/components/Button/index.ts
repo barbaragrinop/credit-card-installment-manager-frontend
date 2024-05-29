@@ -1,5 +1,6 @@
 import Primary from "./primary";
+import Secondary from "./secondary";
 
 export const Button = {
-    Primary, 
+    Primary, Secondary
 }

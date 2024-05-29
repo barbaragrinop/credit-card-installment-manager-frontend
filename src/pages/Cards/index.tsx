@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { useCardTableColumn } from "./hooks/cards-table-columns.hook";
 import { useNotifier } from "@/hooks/useNotifier";
 import { useState } from "react";
-import { Description, Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
+import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 
 type FieldValues = {
   name: string;
@@ -30,6 +30,7 @@ type CardSubmitData = {
 
 function CardsPage() {
   const [editCardId, setEditCardId] = useState<number | null>(null)
+  const [currentDeletedCard, setCurrentDeletedCard] = useState<Card | null>(null)
 
   const {
     register,
@@ -42,8 +43,7 @@ function CardsPage() {
   const { columns } = useCardTableColumn({ onEdit, onDelete })
   const { success, error } = useNotifier()
   const { data, mutate } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/card/get-cards-by-userId?userId=${user?.id}`, fetcher)
-  // const { currentValue, isFalse, isTrue } = useBoolean()
-  let [isOpen, setIsOpen] = useState(false)
+  const { isTrue: isOpen, isFalse: isClosed, currentValue } = useBoolean()
 
   async function submitForm(values: FieldValues) {
     try {
@@ -86,14 +86,31 @@ function CardsPage() {
     setValue('card_brand', card.cardBrand)
   }
 
-  async function onDelete(card: Card) {
+  function onDelete(card: Card) {
+    isOpen()
+    setCurrentDeletedCard(card)
+  }
 
-    setIsOpen(true)
+  async function deleteCard(){
+    try {
+      await api({
+        method: "DELETE",
+        url: `${import.meta.env.VITE_ENVIRONMENT}/card?id=${currentDeletedCard?.id}`,
+      });
+
+      mutate()
+      success("Cartão deletado com sucesso!")
+      isClosed()
+      setCurrentDeletedCard(null)
+    } catch (err) {
+      console.error("err", err);
+      error("Erro ao deletar cartão!")
+    }
   }
 
   return (
     <Container pageName="Cartões">
-      <div className="min-h-full flex flex-col bg-gray-100 rounded p-4">
+      <div className="min-h-full flex flex-col rounded p-4">
         <h1 className="text-3xl pb-12">Cadastrar cartão</h1>
         <form onSubmit={handleSubmit(submitForm)}>
           <div className="grid grid-cols-3 gap-4">
@@ -130,34 +147,34 @@ function CardsPage() {
         )}
 
       </div>
-      <button onClick={() => setIsOpen(true)}>Open dialog</button>
-      <Transition appear show={isOpen}>
-        <Dialog as="div" className="relative z-10 focus:outline-none" onClose={close}>
+      <Transition appear show={currentValue}>
+        <Dialog as="div" className="relative  border-2" onClose={close}>
           <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
               <TransitionChild
-                enter="ease-out duration-300" 
+                enter="ease-out duration-300"
                 enterFrom="opacity-0 transform-[scale(95%)]"
                 enterTo="opacity-100 transform-[scale(100%)]"
                 leave="ease-in duration-200"
                 leaveFrom="opacity-100 transform-[scale(100%)]"
                 leaveTo="opacity-0 transform-[scale(95%)]"
               >
-                <DialogPanel className="w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl">
-                  <DialogTitle as="h3" className="text-base/7 font-medium text-white">
-                    Payment successful
+                <DialogPanel className="w-full max-w-md rounded-xl bg-white backdrop-blur-2xl shadow-xl border">
+                  <DialogTitle as="h3" className="text-base/7 font-medium p-3 rounded-tr-xl rounded-tl-xl bg-cyan-800 text-white">
+                    Confirmação
                   </DialogTitle>
-                  <p className="mt-2 text-sm/6 text-white/50">
-                    Your payment has been successfully submitted. We’ve sent you an email with all of the details of
-                    your order.
-                  </p>
-                  <div className="mt-4">
-                    <Button.Primary
-                      // className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-                      onClick={close}
-                    >
-                      Got it, thanks!
-                    </Button.Primary>
+                  <div className="px-4">
+                    <p className="mt-2 text-sm/6  ">
+                      Você está prestes e excluir o cartão <b>{currentDeletedCard?.name}.</b> <br /> Deseja continuar?
+                    </p>
+                    <div className="mt-4 flex justify-end gap-4 pb-3">
+                      <Button.Primary onClick={() => isClosed()}>
+                        Cancelar
+                      </Button.Primary>
+                      <Button.Secondary onClick={deleteCard}>
+                        Deletar
+                      </Button.Secondary>
+                    </div>
                   </div>
                 </DialogPanel>
               </TransitionChild>
