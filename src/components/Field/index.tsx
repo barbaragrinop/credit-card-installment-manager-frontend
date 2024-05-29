@@ -1,8 +1,17 @@
 import { ChangeEvent, InputHTMLAttributes, useCallback, useState } from "react"
 import classNames from 'classnames';
-import { RiArrowDownSLine } from "react-icons/ri";
+import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, Label, Menu, MenuButton, MenuItem, MenuItems, Transition, Field as FieldHeadless, ComboboxButton } from '@headlessui/react'
+// import {
+//   ArchiveBoxXMarkIcon,
+//   ChevronDownIcon,
+//   PencilIcon,
+//   Square2StackIcon,
+//   TrashIcon,
+// } from '@heroicons/react/16/solid'
 import { v4 as uuidV4 } from 'uuid';
 import { UseFormRegisterReturn } from "react-hook-form";
+import { BiArrowToBottom, BiDownArrow, BiEdit, BiFace } from "react-icons/bi";
+import { IoIosArrowDown } from "react-icons/io";
 
 type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
@@ -152,99 +161,84 @@ function Checkbox({ id, name, label, placeholder = " ", register, ...rest }: Fie
 }
 
 
+type MenuItem = { label: string, value: number }
 
 type SelectProps = FieldProps & {
-  options: { label: string, value: string }[]
-}
+  options: MenuItem[];
+  onChange?: (option: { value: number; label: string; id: string; name: string }) => void;
+  name: string;
+  label: string;
+};
 
-function Select({ id = uuidV4(), name, label, onChange, options, ...rest }: SelectProps) {
-  const [focused, setFocused] = useState<boolean>(false);
-  const [hasValue, setHasValue] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>('');
-  const [filteredOptions, setFilteredOptions] = useState<{ label: string, value: string }[]>(options);
+function Select({ id = uuidV4(), name, label, onChange, options, placeholder, register, ...rest }: SelectProps) {
+  const [query, setQuery] = useState('')
+  const [selectedItem, setSelectedItem] = useState<MenuItem>({
+    label: 'Selecione',
+    value: 0
+  });
 
-  const handleFocus = useCallback(() => {
-    setFocused(true);
-  }, []);
 
-  const handleBlur = useCallback(() => {
-    setTimeout(() => {
-      setFocused(false);
-    }, 100);
-  }, []);
-
-  const handleChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
-    const currentValue = ev.target.value;
-    setInputValue(currentValue);
-    setHasValue(currentValue.length > 0);
-
-    if (onChange) {
-      onChange(ev);
-    }
-
-    const filter = options.filter(option => option.label.toLowerCase().includes(currentValue.toLowerCase()));
-    setFilteredOptions(filter);
-    setFocused(true);
-  }, [onChange, options]);
-
-  const handleClickIcon = useCallback(() => {
-    setFocused(prevFocused => !prevFocused);
-  }, []);
-
-  const handleOptionClick = useCallback((label: string, value: string) => {
-    setInputValue(label);
-    setHasValue(true);
-    setFocused(false);
-
-    if (onChange) {
-      onChange({ value: value, label: label, id: id, name: name } as any);
-    }
-  }, [onChange, name]);
+  const filteredPeople =
+    query === ''
+      ? options
+      : options.filter((option) => {
+        return option.label.toLowerCase().includes(query.toLowerCase())
+      })
 
   return (
-    <div className="flex flex-col w-full relative">
-      <label htmlFor={id} className={classNames('absolute left-2 transition-all', {
-        'top-[-6px] text-xs text-cyan-800 px-1 bg-white': focused || hasValue,
-        'top-3 text-sm text-gray-500 px-2': !focused && !hasValue,
-      })}>
-        {label}
-      </label>
-      <input
-        type="text"
-        id={id}
-        value={inputValue}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        
-        name={name}
-        className="pl-4 px-2 py-2 border rounded pr-8 focus:outline-none focus:border-cyan-800 text-gray-800"
-        {...rest}
-      />
-      {focused && (
-        <div className="block">
-          <ul className="absolute mt-1 z-10 w-full bg-white border rounded shadow-md">
-            {filteredOptions.map(({ label, value }) => (
-              <li
-                key={value}
-                className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
-                onMouseDown={() => handleOptionClick(label, value)}
-              >
-                {label}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <RiArrowDownSLine
+    <FieldHeadless className="relative">
+      <Label
         className={classNames(
-          "absolute top-1/2 right-2 transform -translate-y-1/2 h-full cursor-pointer transition-transform",
-          { "rotate-180": focused, "rotate-0": !focused }
-        )}
-        onClick={handleClickIcon}
-      />
-    </div>
-  );
+          "absolute text-sm text-gray-500 dark:text-gray-400",
+          "duration-300 transform -translate-y-4 scale-75 top-4 z-10",
+          "origin-[0] start-2.5 peer-focus:text-cyan-800",
+          "peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100",
+          "peer-placeholder-shown:translate-y-0 peer-focus:scale-75",
+          "peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4",
+          "rtl:peer-focus:left-auto")}
+      >{label}</Label>
+      <Combobox
+        value={selectedItem}
+        onChange={(e) => {
+          if (e && onChange) {
+            onChange({ value: e.value, label: label, id: id, name: name });
+          }
+
+          setSelectedItem({
+            label: e?.label || '',
+            value: e?.value || 0
+          })
+        }}
+        onClose={() => setQuery('')}>
+        <div className="relative">
+          <ComboboxInput
+            className={classNames(
+              "block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm",
+              "text-gray-900 bg-gray-50 dark:bg-gray-700 border-0",
+              "border-b-2 border-gray-300 appearance-none dark:text-white",
+              "dark:border-gray-600 dark:focus:border-cyan-800",
+              "focus:outline-none focus:ring-0 focus:border-cyan-800 peer"
+            )}
+            aria-label="Selecione um item"
+            displayValue={(person: MenuItem | null) => person ? person.label : ''}
+            onChange={(event) => setQuery(event.target.value)}
+            {...register}
+          />
+          <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
+            <IoIosArrowDown className="size-4" />
+          </ComboboxButton>
+        </div>
+
+        <ComboboxOptions anchor="bottom" className="mt-1 z-10 w-fit bg-white rounded shadow-md">
+          {filteredPeople.map((item) => (
+            <ComboboxOption key={item.value} value={item} className="py-2 px-4 hover:bg-gray-100 cursor-pointer">
+              {item.label}
+            </ComboboxOption>
+          ))}
+        </ComboboxOptions>
+      </Combobox>
+    </FieldHeadless>
+  )
 }
 
 

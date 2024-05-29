@@ -11,6 +11,10 @@ import { useHomeTableColumn } from "./hooks/table-column.hook";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string, number } from 'yup';
+import useSWR from "swr";
+import { useAuth } from "@/context/useAuth";
+import { useHttpConfig } from "@/hooks/useHttpConfig";
+import { Card } from "@/types/credit-card";
 
 type FormValues = {
   loja: string;
@@ -31,25 +35,24 @@ const validation = object<FormValues>().shape({
 
 function HomePage() {
   const { columns } = useHomeTableColumn();
-  const [data, setData] = useState<Installment[]>(purchasesMock);
-  const { handleSubmit,
-    register,
-    formState: {
-      errors
-    } } = useForm({
-      resolver: yupResolver<FormValues>(validation),
-      defaultValues: {
-        loja: "",
-        product: "",
-        cartao: "",
-        qtdParcelas: 0,
-        dtCompra: "",
-      }
-    });
+  const { user } = useAuth()
+  const { fetcher } = useHttpConfig()
+  const { data } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/card/get-cards-by-userId?userId=${user?.id}`, fetcher)
 
-    function submitForm(values: FormValues) {
-      console.log(values)
+  const { handleSubmit, register } = useForm({
+    resolver: yupResolver<FormValues>(validation),
+    defaultValues: {
+      loja: "",
+      product: "",
+      cartao: "",
+      qtdParcelas: 0,
+      dtCompra: "",
     }
+  });
+
+  function submitForm(values: FormValues) {
+    console.log(values)
+  }
 
   return (
     <Container pageName="Home">
@@ -61,7 +64,8 @@ function HomePage() {
           <div className="grid grid-cols-3 gap-4">
             <Field.Text name="loja" id="loja" label="Loja" register={register("loja")} />
             <Field.Text name="product" id="product" label="Product" register={register("product")} />
-            <Field.Text name="cartao" id="cartao" label="Cartão" register={register("cartao")} />
+            <Field.Select options={data?.map((x) => ({ label: x.name, value: x.id })) || []}
+              name="cartao" id="cartao" label="Cartão" register={register("cartao")} />
             <Field.Text name="qtdParcelas" id="qtdParcelas" label="Qtd. Parcelas" register={register("qtdParcelas")} />
             <Field.Date name="dtCompra" id="dtCompra" label="Data da compra" register={register("dtCompra")} />
           </div>
@@ -70,25 +74,30 @@ function HomePage() {
             <Button.Primary type="submit">Salvar</Button.Primary>
           </div>
         </form>
-        <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
-        <InstallmentsFilter />
-        <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
 
+        {data && data.length > 0 && (
+          <>
+            <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
+            <InstallmentsFilter />
+            <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
+            {
+              data.map((item: any, key: any) => (
+                <div key={key}>
+                  <div className="">
+                    <div className="">
+                      <p className="text-center font-bold">{item.produto}</p>
+                      <p className="text-center text-xs -mt-1">{item.cartao}</p>
+                    </div>
+                  </div>
+                  <Table data={[item]} columns={columns} />
+                  <hr className="border-t-1 w-1/2 my-7 border-cyan-800 rounded-lg m-auto" />
 
-        {
-          data.map((item, key) => (
-            <div key={key}>
-              <div className="">
-                <div className="">
-                  <p className="text-center font-bold">{item.produto}</p>
-                  <p className="text-center text-xs -mt-1">{item.cartao}</p>
                 </div>
-              </div>
-              <Table data={[item]} columns={columns} />
-              <hr className="border-t-1 w-1/2 my-7 border-cyan-800 rounded-lg m-auto" />
+              ))
+            }
+          </>
+        )
 
-            </div>
-          ))
         }
 
 
