@@ -23,7 +23,7 @@ export function Header({ pageName,}: Props) {
           <li key="Home"  className={classNames({
             'font-bold': pageName === "Home"
           })}>
-            <a href="">Home</a>
+            <a href="/home">Home</a>
           </li>
           <li key="Dashboard" className={classNames({
             'font-bold': pageName === "Dashboard"
