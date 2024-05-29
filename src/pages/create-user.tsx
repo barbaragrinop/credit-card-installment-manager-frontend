@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import { useNotifier } from "@/hooks/useNotifier";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useAuth } from "@/context/useAuth";
 
 type CreateUser = {
     email: string;
@@ -31,11 +32,13 @@ const validation = object().shape({
 function CreateUserPage() {
     const { success, error } = useNotifier()
     const navigate = useNavigate();
+    const { isLoggedIn } = useAuth()
+
     useEffect(() => {
-        if (localStorage.getItem('token')) {
+        if (isLoggedIn) {
             navigate('/home')
         }
-    })
+    }, [isLoggedIn])
 
     const {
         handleSubmit,

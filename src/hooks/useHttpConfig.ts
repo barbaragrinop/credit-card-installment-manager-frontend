@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export function useHttpConfig() {
 
@@ -13,14 +13,14 @@ export function useHttpConfig() {
         return config;
     });
 
-    function api(config: AxiosRequestConfig) {
+    function api(config: AxiosRequestConfig): Promise<AxiosResponse<any, any>> {
         return client(config);
     }
 
-    const fetcher = async (url: string) => {
+    async function fetcher(url: string): Promise<any> {
         const response = await client.get(url);
         return response.data;
-    };
+    }
 
     return {
         api,

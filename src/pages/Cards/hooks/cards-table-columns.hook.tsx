@@ -3,13 +3,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { BiEdit, BiTrash } from "react-icons/bi";
 
-// type Props = {
-//     onEdit: (card: Card) => void;
-//     onDelete: (card: Card) => void;
-// }
+type Props = {
+    onEdit: (card: Card) => void;
+    onDelete: (cardId: Card) => void;
+}
 
-// export function useCardTableColumn({onDelete, onEdit}: Props) {
-    export function useCardTableColumn() {
+export function useCardTableColumn({ onEdit, onDelete }: Props) {
 
     const columns = useMemo<ColumnDef<Card>[]>(() => {
         return [
@@ -18,26 +17,21 @@ import { BiEdit, BiTrash } from "react-icons/bi";
                 accessorKey: "name",
             },
             {
-                header: "Data de vencimento",
+                header: "Dia do vencimento",
                 accessorKey: "dueDay",
             },
             {
-                header: "Data de vencimento",
-                accessorKey: "id",
-            },
-            {
-                header: "Data de vencimento",
+                header: "Bandeira  do cartão",
                 accessorKey: "cardBrand",
             },
             {
                 header: "Ações",
                 accessorKey: "actions",
                 cell: ({ row }) => {
-                    // console.log('row', row)
                     return (
                         <div className="flex gap-4 justify-center">
-                            <BiTrash className="border text-3xl p-1 rounded bg-cyan-800 cursor-pointer text-white"  />
-                            <BiEdit className="border text-3xl p-1 rounded bg-cyan-800 cursor-pointer text-white" />
+                            <BiEdit className="border text-3xl p-1 rounded bg-cyan-800 cursor-pointer text-white" onClick={() => onEdit(row.original)} />
+                            <BiTrash className="border text-3xl p-1 rounded bg-cyan-800 cursor-pointer text-white" onClick={() => onDelete(row.original)} />
                         </div>
                     );
                 },

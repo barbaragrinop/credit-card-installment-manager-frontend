@@ -58,7 +58,7 @@ function Table<T>({ columns, data, filterActive }: Props<T>) {
                         <tr key={row.id} className="border border-gray-900">
                             {row.getVisibleCells().map(cell => {
                                 return (
-                                    <td key={cell.id} className="border border-gray-900 h-12" style={{ width: cell.column.getSize() }}>
+                                    <td key={cell.id} className="border border-gray-900 h-12" style={{ width: cell.column.getSize() }} >
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext()

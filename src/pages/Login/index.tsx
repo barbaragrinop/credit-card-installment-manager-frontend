@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { object, string } from 'yup';
+import { useEffect } from "react";
 
 const validation = object().shape({
   email: string().email("Must be a valid e-mail").required("E-mail is required"),
@@ -31,12 +32,11 @@ function LoginPage() {
       }
     });
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     navigate('/home')
-  //   }
-  // }, [navigate])
+  useEffect(() => {
+    if(isLoggedIn) {
+      navigate('/home')
+    }
+  }, [isLoggedIn])
 
 
 

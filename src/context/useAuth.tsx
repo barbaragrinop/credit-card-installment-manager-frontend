@@ -31,7 +31,7 @@ export function UserProvider({ children }: Props) {
         setIsReady(true)
 
         if (token) {    
-            setToken    
+            setToken(token)
             const decoded: any = jwtDecode(token);
 
 
