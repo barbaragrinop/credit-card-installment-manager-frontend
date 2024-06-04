@@ -10,7 +10,7 @@ import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, Label, Menu, 
 // } from '@heroicons/react/16/solid'
 import { v4 as uuidV4 } from 'uuid';
 import { UseFormRegisterReturn } from "react-hook-form";
-import { BiArrowToBottom, BiDownArrow, BiEdit, BiFace } from "react-icons/bi";
+import { BiArrowToBottom, BiCheck, BiDownArrow, BiEdit, BiFace } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
 
 type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -170,23 +170,30 @@ type SelectProps = FieldProps & {
   label: string;
 };
 
+// const people = [
+//   { id: 1, name: 'Tom Cook' },
+//   { id: 2, name: 'Wade Cooper' },
+//   { id: 3, name: 'Tanya Fox' },
+//   { id: 4, name: 'Arlene Mccoy' },
+//   { id: 5, name: 'Devon Webb' },
+// ]
+
 function Select({ id = uuidV4(), name, label, onChange, options, placeholder, register, ...rest }: SelectProps) {
   const [query, setQuery] = useState('')
-  const [selectedItem, setSelectedItem] = useState<MenuItem>({
-    label: 'Selecione',
-    value: 0
-  });
+  const [selected, setSelected] = useState<MenuItem>({
+    value: 0,
+    label: '',
+  })
 
-
-  const filteredPeople =
+  const filteredOptions =
     query === ''
       ? options
-      : options.filter((option) => {
-        return option.label.toLowerCase().includes(query.toLowerCase())
+      : options.filter((opt) => {
+        return opt.label.toLowerCase().includes(query.toLowerCase())
       })
 
   return (
-    <FieldHeadless className="relative">
+    <FieldHeadless className="w-full relative">
       <Label
         className={classNames(
           "absolute text-sm text-gray-500 dark:text-gray-400",
@@ -197,19 +204,7 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, re
           "peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4",
           "rtl:peer-focus:left-auto")}
       >{label}</Label>
-      <Combobox
-        value={selectedItem}
-        onChange={(e) => {
-          if (e && onChange) {
-            onChange({ value: e.value, label: label, id: id, name: name });
-          }
-
-          setSelectedItem({
-            label: e?.label || '',
-            value: e?.value || 0
-          })
-        }}
-        onClose={() => setQuery('')}>
+      <Combobox value={selected} onChange={(value: any) => setSelected(value)}>
         <div className="relative">
           <ComboboxInput
             className={classNames(
@@ -219,23 +214,35 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, re
               "dark:border-gray-600 dark:focus:border-cyan-800",
               "focus:outline-none focus:ring-0 focus:border-cyan-800 peer"
             )}
-            aria-label="Selecione um item"
-            displayValue={(person: MenuItem | null) => person ? person.label : ''}
+            displayValue={(person: any) => person?.label}
             onChange={(event) => setQuery(event.target.value)}
-            {...register}
+            {...rest}
           />
-          <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
-            <IoIosArrowDown className="size-4" />
+          <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5 transition-all">
+            <IoIosArrowDown className="size-4 " />
           </ComboboxButton>
         </div>
-
-        <ComboboxOptions anchor="bottom" className="mt-1 z-10 w-fit bg-white rounded shadow-md">
-          {filteredPeople.map((item) => (
-            <ComboboxOption key={item.value} value={item} className="py-2 px-4 hover:bg-gray-100 cursor-pointer">
-              {item.label}
-            </ComboboxOption>
-          ))}
-        </ComboboxOptions>
+        <Transition
+          leave="transition ease-in duration-100"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          afterLeave={() => setQuery('')}
+        >
+          <ComboboxOptions
+            anchor="bottom" className="mt-1 z-10  bg-white rounded shadow-md "
+          >
+            {filteredOptions.map((opt) => (
+              <ComboboxOption
+                key={opt.value}
+                value={opt}
+                className="group py-2 px-4 hover:bg-cyan-800/25 cursor-pointer w-[var(--input-width)] flex items-center gap-3"
+              >
+                <BiCheck className="invisible size-4 group-data-[selected]:visible text-lime-950" />
+                <span className="text-gray-800">{opt.label}</span>
+              </ComboboxOption>
+            ))}
+          </ComboboxOptions>
+        </Transition>
       </Combobox>
     </FieldHeadless>
   )
