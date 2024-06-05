@@ -56,9 +56,9 @@ function LoginPage() {
             <Field.Text id="email" name="email" label="E-mail" type="text" control={control}  />
             <Field.Text id="password" name="password" label="Password" type="password" control={control}/>
             <Button.Primary type="submit">Entrar</Button.Primary>
-            <Button.Primary type="submit" onClick={() => {
-              console.log("asdasd", getValues(), errors)
-              // navigate('/create-user')
+            <Button.Primary  onClick={() => {
+              
+              navigate('/create-user')
             }}>Cadastrar</Button.Primary>
           </form>
         </div>

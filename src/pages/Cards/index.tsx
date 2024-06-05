@@ -13,7 +13,6 @@ import { useCardTableColumn } from "./hooks/cards-table-columns.hook";
 import { useNotifier } from "@/hooks/useNotifier";
 import { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
-import { AxiosError } from "axios";
 
 type FieldValues = {
   name: string;
@@ -34,7 +33,6 @@ function CardsPage() {
   const [currentDeletedCard, setCurrentDeletedCard] = useState<Card | null>(null)
 
   const {
-    register,
     handleSubmit,
     reset,
     setValue,

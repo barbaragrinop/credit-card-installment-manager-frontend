@@ -13,7 +13,6 @@ import { useAuth } from "@/context/useAuth";
 import { useHttpConfig } from "@/hooks/useHttpConfig";
 import { Card } from "@/types/credit-card";
 import { SelectProp } from "@/types/select";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useNotifier } from "@/hooks/useNotifier";
 
@@ -47,7 +46,7 @@ function HomePage() {
   const { columns } = useHomeTableColumn();
   const { user } = useAuth()
   const { api, fetcher } = useHttpConfig()
-  const { data } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/card/get-cards-by-userId?userId=${user?.id}`, fetcher)
+  const { data } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/purchase/get-purchases-by-userId?userId=${user?.id}`, fetcher)
   const { handleSubmit, control, getValues, formState: { errors } } = useForm({
     resolver: yupResolver<FormValues>(validation),
     defaultValues: {
