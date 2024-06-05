@@ -46,8 +46,8 @@ function HomePage() {
   const { columns } = useHomeTableColumn();
   const { user } = useAuth()
   const { api, fetcher } = useHttpConfig()
-  const { data } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/purchase/get-purchases-by-userId?userId=${user?.id}`, fetcher)
-  const { handleSubmit, control, getValues, formState: { errors } } = useForm({
+  const { data, mutate } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/purchase/get-purchases-by-userId?userId=${user?.id}`, fetcher)
+  const { handleSubmit, control, reset } = useForm({
     resolver: yupResolver<FormValues>(validation),
     defaultValues: {
       loja: "",
@@ -73,7 +73,6 @@ function HomePage() {
         userId: user!.id,
         value: values.vlCompra
       }
-      console.log('data', data)
 
       if (editCardId) {
         data = {
@@ -88,8 +87,11 @@ function HomePage() {
         data,
       });
 
-      success("Cartão cadastrado com sucesso!")
+      mutate()
+      reset()
+      success("Compra cadastrada com sucesso")
     } catch (err: any) {
+      success("Erro ao cadastrar compra")
       console.log(err)
     }
   }
@@ -111,9 +113,7 @@ function HomePage() {
           </div>
           <div className="flex gap-4 justify-end pt-6">
             <Button.Primary>Cancelar</Button.Primary>
-            <Button.Primary type="submit" onClick={() => {
-              console.log("çalkds", getValues(), errors)
-            }}>Salvar</Button.Primary>
+            <Button.Primary type="submit">Salvar</Button.Primary>
           </div>
         </form>
 
@@ -122,7 +122,7 @@ function HomePage() {
             <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
             <InstallmentsFilter />
             <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
-            {data.map((item: any, key: any) => (
+            {data && data?.map((item: any, key: any) => (
               <div key={key}>
                 <div className="">
                   <div className="">
@@ -132,7 +132,6 @@ function HomePage() {
                 </div>
                 <Table data={[item]} columns={columns} />
                 <hr className="border-t-1 w-1/2 my-7 border-cyan-800 rounded-lg m-auto" />
-
               </div>
             ))}
           </>
