@@ -20,20 +20,16 @@ function LoginPage() {
   const { login, isLoggedIn } = useAuth();
   const { error } = useNotifier()
   const navigate = useNavigate()
-  const { handleSubmit,
-    register,
-    formState: {
-      errors
-    } } = useForm<LoginFormsInput>({
-      resolver: yupResolver(validation),
-      defaultValues: {
-        email: "",
-        password: "",
-      }
-    });
+  const { handleSubmit, control, getValues, formState: {errors} } = useForm<LoginFormsInput>({
+    resolver: yupResolver(validation),
+    defaultValues: {
+      email: "",
+      password: "",
+    }
+  });
 
   useEffect(() => {
-    if(isLoggedIn) {
+    if (isLoggedIn) {
       navigate('/home')
     }
   }, [isLoggedIn])
@@ -57,13 +53,12 @@ function LoginPage() {
         <div className="flex justify-center items-center">
           <form className="flex flex-col gap-3 w-72 items-end"
             onSubmit={handleSubmit(handleLogin)}>
-            <Field.Text id="email" name="email" label="E-mail" type="text" register={register("email")} />
-            {errors && errors.email && <small className="text-red-500">{errors.email.message}</small>}
-            <Field.Text id="password" name="password" label="Password" type="password" register={register("password")} />
-            {errors && errors.password && <small className="text-red-500">{errors.password.message}</small>}
+            <Field.Text id="email" name="email" label="E-mail" type="text" control={control}  />
+            <Field.Text id="password" name="password" label="Password" type="password" control={control}/>
             <Button.Primary type="submit">Entrar</Button.Primary>
             <Button.Primary type="submit" onClick={() => {
-              navigate('/create-user')
+              console.log("asdasd", getValues(), errors)
+              // navigate('/create-user')
             }}>Cadastrar</Button.Primary>
           </form>
         </div>

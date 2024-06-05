@@ -13,6 +13,7 @@ import { useCardTableColumn } from "./hooks/cards-table-columns.hook";
 import { useNotifier } from "@/hooks/useNotifier";
 import { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
+import { AxiosError } from "axios";
 
 type FieldValues = {
   name: string;
@@ -73,9 +74,9 @@ function CardsPage() {
       reset()
       success("Cartão cadastrado com sucesso!")
       setEditCardId(null)
-    } catch (err) {
+    } catch (err: any) {
       console.error("err", err);
-      error("Erro ao cadastrar cartão!")
+      error(err.response?.data || "Erro ao cadastrar cartão!")
     }
   }
 

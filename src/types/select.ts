@@ -4,3 +4,9 @@ export type FieldSelectOnEventProps = {
     id: string; 
     name: string; 
 }
+
+
+export type SelectProp = {
+    label: string; 
+    value: number; 
+}

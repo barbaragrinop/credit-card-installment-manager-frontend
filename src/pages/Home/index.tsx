@@ -4,9 +4,6 @@ import Table from "@/components/Table";
 
 import { Button } from "@/components/Button";
 import { Field } from "@/components/Field";
-import { Installment } from "@/types/purchase";
-import { purchasesMock } from "@/utils/mock-data";
-import { useState } from "react";
 import { useHomeTableColumn } from "./hooks/table-column.hook";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,11 +12,12 @@ import useSWR from "swr";
 import { useAuth } from "@/context/useAuth";
 import { useHttpConfig } from "@/hooks/useHttpConfig";
 import { Card } from "@/types/credit-card";
+import { SelectProp } from "@/types/select";
 
 type FormValues = {
   loja: string;
   product: string;
-  cartao: string;
+  cartao: SelectProp;
   qtdParcelas: number;
   dtCompra: string;
 }
@@ -27,7 +25,10 @@ type FormValues = {
 const validation = object<FormValues>().shape({
   loja: string().required("Campo obrigatório"),
   product: string().required("Campo obrigatório"),
-  cartao: string().required("Campo obrigatório"),
+  cartao:  object().shape({
+    label: string().required("Campo obrigatório"),
+    value: number().required("Campo obrigatório")
+  }),
   qtdParcelas: number().required("Campo obrigatório"),
   dtCompra: string().required("Campo obrigatório"),
 })
@@ -39,15 +40,22 @@ function HomePage() {
   const { fetcher } = useHttpConfig()
   const { data } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/card/get-cards-by-userId?userId=${user?.id}`, fetcher)
 
-  const { handleSubmit, register } = useForm({
+  const { handleSubmit, getValues, formState: {
+    errors
+  }, control } = useForm({
+
     resolver: yupResolver<FormValues>(validation),
     defaultValues: {
       loja: "",
       product: "",
-      cartao: "",
+      cartao: {
+        label: "",
+        value: 0
+      },
       qtdParcelas: 0,
       dtCompra: "",
-    }
+    },
+    mode: "all"
   });
 
   function submitForm(values: FormValues) {
@@ -59,19 +67,23 @@ function HomePage() {
       <div className="min-h-full flex flex-col bg-gray-100 rounded p-4">
         <h1 className="text-3xl pb-12">
           Gerenciador de parcelas
+
         </h1>
         <form onSubmit={handleSubmit(submitForm)}>
           <div className="grid grid-cols-3 gap-4">
-            <Field.Text name="loja" id="loja" label="Loja" register={register("loja")} />
-            <Field.Text name="product" id="product" label="Product" register={register("product")} />
+            <Field.Text name="loja" id="loja" label="Loja" control={control} />
+            <Field.Text name="product" id="product" label="Product" control={control} />
             <Field.Select options={data?.map((x) => ({ label: x.name, value: x.id })) || []}
-              name="cartao" id="cartao" label="Cartão" register={register("cartao")} />
-            <Field.Text name="qtdParcelas" id="qtdParcelas" label="Qtd. Parcelas" register={register("qtdParcelas")} />
-            <Field.Date name="dtCompra" id="dtCompra" label="Data da compra" register={register("dtCompra")} />
+              name="cartao" id="cartao" label="Cartão" control={control} />
+            <Field.Text name="qtdParcelas" id="qtdParcelas" label="Qtd. Parcelas" control={control} />
+            <Field.Date name="dtCompra" id="dtCompra" label="Data da compra" control={control} />
           </div>
           <div className="flex gap-4 justify-end pt-6">
             <Button.Primary>Cancelar</Button.Primary>
-            <Button.Primary type="submit">Salvar</Button.Primary>
+            <Button.Primary type="submit" onClick={() => {
+              console.log("asdsad", getValues())
+              console.log("asdsad", errors)
+            }}>Salvar</Button.Primary>
           </div>
         </form>
 

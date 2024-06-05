@@ -1,11 +1,13 @@
+import { SelectProp } from "@/types/select"
+
 export const selectFilterHomeValues = {
-    entredatas: "entredatas",
-    porcartao: "porcartao",
-    porloja: "porloja",
-    porproduto: "porproduto"
+    entredatas: 0,
+    porcartao: 1,
+    porloja: 2,
+    porproduto: 3
 }
 
-export const selectHomeOptions: { label: string, value: string }[] = [
+export const selectHomeOptions: SelectProp[] = [
     {
         label: "Entre datas",
         value: selectFilterHomeValues.entredatas
