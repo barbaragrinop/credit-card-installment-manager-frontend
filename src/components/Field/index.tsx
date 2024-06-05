@@ -17,12 +17,12 @@ type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
 }
 
 function Text({ id, name, control, label, placeholder = " ", ...rest }: FieldProps) {
-  const { formState: { errors }, field: { ref, ...fieldrest } } = useController({
+  const { fieldState: { error }, field: { ref, ...fieldrest } } = useController({
     name,
     control
   })
 
-  const errorMessage = errors?.[name]?.message as string;
+  const errorMessage = error?.message as string;
 
   return (
     <div>
@@ -68,8 +68,9 @@ function Number({ id, name, label, placeholder = " ", control, ...rest }: FieldP
 
   const errorMessage = error?.message as string;
 
+
   return (
-    <>
+    <div>
       <div className="relative w-full">
         <input
           type="number"
@@ -100,17 +101,17 @@ function Number({ id, name, label, placeholder = " ", control, ...rest }: FieldP
       {errorMessage && (
         <FieldErrorMessage message={errorMessage} />
       )}
-    </>
+    </div>
   )
 }
 
 function Date({ id, name, label, placeholder = " ", control, ...rest }: FieldProps) {
-  const { formState: { errors }, field: { ref, ...fieldrest } } = useController({
+  const { fieldState: { error }, field: { ref, ...fieldrest } } = useController({
     name,
     control
   })
 
-  const errorMessage = errors?.[name]?.message as string;
+  const errorMessage = error?.message as string;
 
   return (
     <div>
@@ -150,12 +151,12 @@ function Date({ id, name, label, placeholder = " ", control, ...rest }: FieldPro
 
 function Checkbox({ id, name, label, placeholder = " ", control, ...rest }: FieldProps) {
 
-  // const { formState: { errors } } = useController({
+  // const { fieldState: { error } } = useController({
   //   name,
   //   control
   // })
 
-  // const errorMessage = errors?.[name]?.message as string;
+  // const errorMessage = error?.message as string;
 
   return (
     <div className="inline-flex items-center">
@@ -216,7 +217,6 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, co
   })
 
   const { fieldState: { error }, field: { ref, onChange: fieldOnChange, value, ...fieldrest } } = useController({
-
     name,
     control,
     defaultValue: {
@@ -225,8 +225,9 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, co
     }
   })
 
-  const errorMessage = error?.message as string;
-
+  // @ts-expect-error insufficient rhf types
+  const errorMessage: any = error?.label?.message as string
+  
   const filteredOptions =
     query === ''
       ? options
@@ -312,84 +313,6 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, co
 }
 
 
-function CommonSelect({ id = uuidV4(), name, label, onChange, options, placeholder, control, ...rest }: SelectProps) {
-  const [query, setQuery] = useState('')
-  const [selected, setSelected] = useState<SelectProp>({
-    value: 0,
-    label: '',
-  })
-
-  const filteredOptions =
-    query === ''
-      ? options
-      : options.filter((opt) => {
-        return opt.label.toLowerCase().includes(query.toLowerCase())
-      })
-
-  return (
-    <FieldHeadless className="w-full relative">
-      <Label
-        className={classNames(
-          "absolute text-sm text-gray-500 dark:text-gray-400",
-          "duration-300 transform -translate-y-4 scale-75 top-4 z-10",
-          "origin-[0] start-2.5 peer-focus:text-cyan-800",
-          "peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100",
-          "peer-placeholder-shown:translate-y-0 peer-focus:scale-75",
-          "peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4",
-          "rtl:peer-focus:left-auto")}
-      >{label}</Label>
-      <Combobox value={selected} onChange={(value: any) => {
-        setSelected(value)
-      }}>
-        <div className="relative">
-          <ComboboxInput
-            className={classNames(
-              "block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm",
-              "text-gray-900 bg-gray-50 dark:bg-gray-700 border-0",
-              "border-b-2 border-gray-300 appearance-none dark:text-white",
-              "dark:border-gray-600 dark:focus:border-cyan-800",
-              "focus:outline-none focus:ring-0 focus:border-cyan-800 peer"
-            )}
-            displayValue={(person: any) => person?.label}
-            onChange={(event) => {
-              if (event && onChange) {
-                onChange({ value: selected?.value, label: label, id: id, name: name });
-              }
-              setQuery(event.target.value)
-            }}
-            {...rest}
-          />
-          <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5 transition-all">
-            <IoIosArrowDown className="size-4 " />
-          </ComboboxButton>
-        </div>
-        <Transition
-          leave="transition ease-in duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          afterLeave={() => setQuery('')}
-        >
-          <ComboboxOptions
-            anchor="bottom" className="mt-1 z-10  bg-white rounded shadow-md "
-          >
-            {filteredOptions.map((opt) => (
-              <ComboboxOption
-                key={opt.value}
-                value={opt}
-                className="group py-2 px-4 hover:bg-cyan-800/25 cursor-pointer w-[var(--input-width)] flex items-center gap-3"
-              >
-                <BiCheck className="invisible size-4 group-data-[selected]:visible text-lime-950" />
-                <span className="text-gray-800">{opt.label}</span>
-              </ComboboxOption>
-            ))}
-          </ComboboxOptions>
-        </Transition>
-      </Combobox>
-    </FieldHeadless>
-  )
-}
-
-
 
 export const Field = {
   Text,
@@ -397,5 +320,4 @@ export const Field = {
   Date,
   Checkbox,
   Select,
-  CommonSelect
 };

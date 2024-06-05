@@ -42,11 +42,8 @@ function CreateUserPage() {
 
     const {
         handleSubmit,
-        register,
-        getValues,
+        control,
         formState: {
-            errors,
-            isDirty,
             isSubmitting,
         } } = useForm<CreateUser>({
             resolver: yupResolver(validation),
@@ -94,21 +91,16 @@ function CreateUserPage() {
                 <div className="flex justify-center items-center">
                     <form className="flex flex-col gap-3 w-72 items-end"
                         onSubmit={handleSubmit(handleRegisterUser)}>
-                        <Field.Text id="name" name="name" label="Name" type="text" register={register("name")} />
-                        <FieldErrorMessage error={errors} field="name" />
-
-                        <Field.Date id="birth_date" name="birth_date" label="Data de Nascimento" register={register("birth_date")} />
-                        <FieldErrorMessage error={errors} field="birth_date" />
-
-                        <Field.Text id="email" name="email" label="E-mail" type="text" register={register("email")} />
-                        <FieldErrorMessage error={errors} field="email" />
-
-                        <Field.Text id="password" name="password" label="Senha" type="password" register={register("password")} />
-                        <FieldErrorMessage error={errors} field="password" />
-
-                        <Field.Text id="confirmPassword" name="confirmPassword" label="Confirme a senha" type="password" register={register("confirmPassword")} />
-                        <FieldErrorMessage error={errors} field="confirmPassword" />
-
+                        <Field.Text id="name" name="name" label="Name" type="text" control={control} />
+                        
+                        <Field.Date id="birth_date" name="birth_date" label="Data de Nascimento" control={control} />
+                        
+                        <Field.Text id="email" name="email" label="E-mail" type="text" control={control} />
+                        
+                        <Field.Text id="password" name="password" label="Senha" type="password" control={control} />
+                        
+                        <Field.Text id="confirmPassword" name="confirmPassword" label="Confirme a senha" type="password" control={control} />
+                        
                         <Button.Primary type="submit"
                             disabled={isSubmitting}
                         >Cadastrar</Button.Primary>

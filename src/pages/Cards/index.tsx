@@ -38,6 +38,7 @@ function CardsPage() {
     handleSubmit,
     reset,
     setValue,
+    control
   } = useForm<FieldValues>();
   const { api, fetcher } = useHttpConfig();
   const { user } = useAuth();
@@ -118,19 +119,19 @@ function CardsPage() {
             <Field.Text
               name="name"
               id="name"
-              register={register("name")}
+              control={control}
               label="Nome do cartão"
             />
             <Field.Number
               name="dueDay"
               id="dueDay"
-              register={register("dueDay")}
+              control={control}
               label="Dia do Vencimento"
             />
             <Field.Text
               name="card_brand"
               id="card_brand"
-              register={register("card_brand")}
+              control={control}
               label="Bandeira do Cartão"
             />
           </div>
