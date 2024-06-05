@@ -226,7 +226,7 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, co
   })
 
   // @ts-expect-error insufficient rhf types
-  const errorMessage: any = error?.label?.message as string
+  const errorMessage = error?.label?.message as string
   
   const filteredOptions =
     query === ''
