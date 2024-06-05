@@ -22,6 +22,14 @@ export type Installment = {
 }
 
 type InstallmentDetails = {
-    dtPagamento: Date;
-    valorPago: number;
+    status: 'PAGO' | 'PENDENTE';
+}
+
+export type Purchase = {
+    id: number
+    date: string,
+    installments: number,
+    store: string,
+    value: number
+    productName: string
 }

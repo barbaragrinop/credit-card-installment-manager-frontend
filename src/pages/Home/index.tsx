@@ -15,6 +15,8 @@ import { Card } from "@/types/credit-card";
 import { SelectProp } from "@/types/select";
 import { useState } from "react";
 import { useNotifier } from "@/hooks/useNotifier";
+import { Purchase } from "@/types/purchase";
+import { format } from "date-fns";
 
 type FormValues = {
   loja: string;
@@ -46,7 +48,9 @@ function HomePage() {
   const { columns } = useHomeTableColumn();
   const { user } = useAuth()
   const { api, fetcher } = useHttpConfig()
-  const { data, mutate } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/purchase/get-purchases-by-userId?userId=${user?.id}`, fetcher)
+  const { data: purchases, mutate } = useSWR<Purchase[]>(`${import.meta.env.VITE_ENVIRONMENT}/purchase/get-purchases-by-userId?userId=${user?.id}`, fetcher)
+  const { data: cards } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/card/get-cards-by-userId?userId=${user?.id}`, fetcher)
+
   const { handleSubmit, control, reset } = useForm({
     resolver: yupResolver<FormValues>(validation),
     defaultValues: {
@@ -106,7 +110,7 @@ function HomePage() {
           <div className="grid grid-cols-3 gap-4">
             <Field.Text name="loja" id="loja" label="Loja" control={control} />
             <Field.Text name="product" id="product" label="Product" control={control} />
-            <Field.Select options={data?.map((x) => ({ label: x.name, value: x.id })) || []} name="cartao" id="cartao" label="Cartão" control={control} />
+            <Field.Select options={cards?.map((x: Card) => ({ label: x.name, value: x.id })) || []} name="cartao" id="cartao" label="Cartão" control={control} />
             <Field.Number step="0.01" name="vlCompra" id="vlCompra" label="Valor total" control={control} />
             <Field.Number name="qtdParcelas" id="qtdParcelas" label="Qtd. Parcelas" control={control} />
             <Field.Date name="dtCompra" id="dtCompra" label="Data da compra" control={control} />
@@ -117,28 +121,25 @@ function HomePage() {
           </div>
         </form>
 
-        {data && data.length > 0 && (
+        {purchases && purchases?.length > 0 && (
           <>
             <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
             <InstallmentsFilter />
             <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
-            {data && data?.map((item: any, key: any) => (
+            {purchases?.map(({ store, date }: Purchase, key: any) => (
               <div key={key}>
                 <div className="">
                   <div className="">
-                    <p className="text-center font-bold">{item.produto}</p>
-                    <p className="text-center text-xs -mt-1">{item.cartao}</p>
+                    <p className="text-center font-bold">{store}</p>
+                    <p className="text-center text-xs -mt-1">{format(new Date(date), 'dd/MM/yyyy')}</p> 
                   </div>
                 </div>
-                <Table data={[item]} columns={columns} />
+                {/* <Table data={purchases} columns={columns} /> */}
                 <hr className="border-t-1 w-1/2 my-7 border-cyan-800 rounded-lg m-auto" />
               </div>
             ))}
           </>
-        )
-
-        }
-
+        )}
 
       </div>
     </Container>

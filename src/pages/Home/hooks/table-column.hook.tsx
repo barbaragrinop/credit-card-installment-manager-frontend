@@ -1,10 +1,12 @@
 import TableMonthColumn from "@/components/Table/components/table-month-column"
-import { Installment } from "@/types/purchase"
+import { Installment, Purchase } from "@/types/purchase"
 import { ColumnDef } from "@tanstack/react-table"
 import { useMemo } from "react"
 
+type Column = Installment & Purchase
+
 export function useHomeTableColumn() {
-  const columns = useMemo<ColumnDef<Installment>[]>(() => {
+  const columns = useMemo<ColumnDef<Column>[]>(() => {
     return [
       {
         accessorKey: 'jan',
