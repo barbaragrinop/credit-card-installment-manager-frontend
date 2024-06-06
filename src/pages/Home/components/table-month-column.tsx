@@ -2,6 +2,7 @@ import { Purchase } from "@/types/purchase";
 import { getMonthByNumber } from "@/utils/months";
 import { Cell } from "@tanstack/react-table";
 import classNames from "classnames";
+import { format } from "date-fns";
 import { BiCheck, BiMoney, BiX } from "react-icons/bi";
 
 type Props = {
@@ -10,21 +11,27 @@ type Props = {
 
 export default function TableMonthColumn({ cell }: Props) {
     const columnName = cell.column.id
-    console.log('columnName', columnName)
-    console.log('columnName', columnName)
     const currentMonthValue = cell.row.original.months[columnName as keyof Purchase['months']]
 
-    const todaysMonth = getMonthByNumber(new Date().getMonth() + 1)
-    console.log('todaysMonth', todaysMonth)
+
+    const todaysMonth = format(new Date(), 'MMM') 
+    // const todayDay = Number(format(new Date(), 'dd'))
+    const todayDay = 17
+    console.log('todayDay', todayDay)
+
+    const cardDueDay = cell.row.original.card.dueDay;
+    console.log('cardDueDay', cardDueDay)
+
+    // if(todayDay <= cardDueDay) {
+    //     todaysMonth++;
+    // }
 
 
-
-    console.log('cell.row.original', cell.row.original)
     console.groupEnd();
 
     return (
         <div className={classNames("flex gap-4 items-center justify-center w-full h-full", {
-            'bg-cyan-800/25': todaysMonth === columnName,
+            'bg-cyan-800/25': todaysMonth === columnName && todayDay <= cardDueDay
         })} key={`${cell.id}-${cell.column}`}>
             {currentMonthValue == undefined && (
                 <BiX />
