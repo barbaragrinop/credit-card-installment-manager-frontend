@@ -126,15 +126,16 @@ function HomePage() {
             <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
             <InstallmentsFilter />
             <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
-            {purchases?.map(({ store, date }: Purchase, key: any) => (
+            {purchases?.map((purchase: Purchase, key: any) => (
               <div key={key}>
                 <div className="">
                   <div className="">
-                    <p className="text-center font-bold">{store}</p>
-                    <p className="text-center text-xs -mt-1">{format(new Date(date), 'dd/MM/yyyy')}</p> 
+                    <p className="text-center font-bold">{purchase.store}</p>
+                    <p className="text-center text-xs -mt-1">{format(new Date(purchase.date), 'dd/MM/yyyy')}</p> 
+                    <p className="text-center text-xs -mt-1">{purchase.installments}</p> 
                   </div>
                 </div>
-                {/* <Table data={purchases} columns={columns} /> */}
+                <Table data={[purchase]} columns={columns} />
                 <hr className="border-t-1 w-1/2 my-7 border-cyan-800 rounded-lg m-auto" />
               </div>
             ))}

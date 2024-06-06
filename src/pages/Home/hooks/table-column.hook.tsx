@@ -1,12 +1,12 @@
-import TableMonthColumn from "@/components/Table/components/table-month-column"
-import { Installment, Purchase } from "@/types/purchase"
+
 import { ColumnDef } from "@tanstack/react-table"
 import { useMemo } from "react"
+import TableMonthColumn from "../components/table-month-column"
+import { Purchase } from "../../../types/purchase"
 
-type Column = Installment & Purchase
 
 export function useHomeTableColumn() {
-  const columns = useMemo<ColumnDef<Column>[]>(() => {
+  const columns = useMemo<ColumnDef<Purchase>[]>(() => {
     return [
       {
         accessorKey: 'jan',
@@ -18,7 +18,7 @@ export function useHomeTableColumn() {
         }
       },
       {
-        accessorKey: 'fev',
+        accessorKey: 'feb',
         header: 'fev',
         cell: ({ cell }) => {
           return (
@@ -36,7 +36,7 @@ export function useHomeTableColumn() {
         }
       },
       {
-        accessorKey: 'abr',
+        accessorKey: 'apr',
         header: 'abr',
         cell: ({ cell }) => {
           return (
@@ -45,7 +45,7 @@ export function useHomeTableColumn() {
         }
       },
       {
-        accessorKey: 'mai',
+        accessorKey: 'may',
         header: 'mai',
         cell: ({ cell }) => {
           return (
@@ -72,7 +72,7 @@ export function useHomeTableColumn() {
         }
       },
       {
-        accessorKey: 'ago',
+        accessorKey: 'aug',
         header: 'ago',
         cell: ({ cell }) => {
           return (
@@ -81,7 +81,7 @@ export function useHomeTableColumn() {
         }
       },
       {
-        accessorKey: 'set',
+        accessorKey: 'sep',
         header: 'set',
         cell: ({ cell }) => {
           return (
@@ -90,7 +90,7 @@ export function useHomeTableColumn() {
         }
       },
       {
-        accessorKey: 'out',
+        accessorKey: 'oct',
         header: 'out',
         cell: ({ cell }) => {
           return (
@@ -108,9 +108,10 @@ export function useHomeTableColumn() {
         }
       },
       {
-        accessorKey: 'dez',
+        accessorKey: 'dec',
         header: 'dez',
         cell: ({ cell }) => {
+          console.log('cell', cell)
           return (
             <TableMonthColumn cell={cell} />
           )
