@@ -26,6 +26,12 @@ type InstallmentDetails = {
     status: 'PAGO' | 'PENDENTE';
 }
 
+type MonthDetails =  {
+    isPaid: boolean,
+    payDay: number,
+    installmentNumber: number
+}
+
 export type Purchase = {
     id: number
     date: string,
@@ -39,17 +45,19 @@ export type Purchase = {
     card: Card
     cardId: number
     months: {
-        jan: boolean | undefined
-        fev: boolean | undefined
-        mar: boolean | undefined
-        abr: boolean | undefined
-        mai: boolean | undefined
-        jun: boolean | undefined
-        jul: boolean | undefined
-        ago: boolean | undefined
-        set: boolean | undefined
-        out: boolean | undefined
-        nov: boolean | undefined
-        dez: boolean | undefined
+        jan: MonthDetails
+        feb: MonthDetails
+        mar: MonthDetails
+        apr: MonthDetails
+        may: MonthDetails
+        jun: MonthDetails
+        jul: MonthDetails
+        aug: MonthDetails
+        sep: MonthDetails
+        oct: MonthDetails
+        nov: MonthDetails
+        dec: MonthDetails
     }
 }
+
+

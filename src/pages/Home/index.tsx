@@ -5,7 +5,7 @@ import useSWR from "swr";
 
 import { Button } from "@/components/Button";
 import { Field } from "@/components/Field";
-import { useHomeTableColumn } from "./hooks/table-column.hook";
+import { useHomeTableColumn } from "./hooks/use-table-column.hook";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string, number } from 'yup';
@@ -17,6 +17,8 @@ import { useState } from "react";
 import { useNotifier } from "@/hooks/useNotifier";
 import { Purchase } from "@/types/purchase";
 import { format } from "date-fns";
+import { IoMdEye } from "react-icons/io";
+import { BiEdit, BiTrash } from "react-icons/bi";
 
 type FormValues = {
   loja: string;
@@ -48,7 +50,7 @@ function HomePage() {
   const { columns } = useHomeTableColumn();
   const { user } = useAuth()
   const { api, fetcher } = useHttpConfig()
-  const { data: purchases, mutate } = useSWR<Purchase[]>(`${import.meta.env.VITE_ENVIRONMENT}/purchase/get-purchases-by-userId?userId=${user?.id}`, fetcher)
+  const { data: purchases, mutate, isLoading } = useSWR<Purchase[]>(`${import.meta.env.VITE_ENVIRONMENT}/purchase/get-purchases-by-userId?userId=${user?.id}`, fetcher)
   const { data: cards } = useSWR<Card[]>(`${import.meta.env.VITE_ENVIRONMENT}/card/get-cards-by-userId?userId=${user?.id}`, fetcher)
 
   const { handleSubmit, control, reset } = useForm({
@@ -128,11 +130,20 @@ function HomePage() {
             <hr className="border-t-4 w-full my-7 border-cyan-800 rounded-lg" />
             {purchases?.map((purchase: Purchase, key: any) => (
               <div key={key}>
-                <div className="">
-                  <div className="">
-                    <p className="text-center font-bold">{purchase.store}</p>
-                    <p className="text-center text-xs -mt-1">{format(new Date(purchase.date), 'dd/MM/yyyy')}</p> 
-                    <p className="text-center text-xs -mt-1">{purchase.installments}</p> 
+                <div className="flex flex-col justify-center items-center gap-3">
+                  <p className="text-center font-bold">{purchase.store}</p>
+                  <p className="text-center text-xs -mt-1">{format(new Date(purchase.date), 'dd/MM/yyyy')}</p>
+                  <p className="text-center text-xs -mt-1">{purchase.installments}</p>
+                  <div className="flex gap-3">
+                  <div className="border border-cyan-800 p-1 h-9 w-9 flex items-center justify-center cursor-pointer rounded-md group hover:bg-cyan-900">
+                    <IoMdEye className="text-center text-2xl text-cyan-800 group-hover:text-white " />
+                  </div>
+                  <div className="border border-cyan-800 p-1 h-9 w-9 flex items-center justify-center cursor-pointer rounded-md group hover:bg-cyan-900">
+                    <BiEdit className="text-center text-2xl text-cyan-800 group-hover:text-white " />
+                  </div>
+                  <div className="border border-cyan-800 p-1 h-9 w-9 flex items-center justify-center cursor-pointer rounded-md group hover:bg-cyan-900">
+                    <BiTrash className="text-center text-2xl text-cyan-800 group-hover:text-white " />
+                  </div>
                   </div>
                 </div>
                 <Table data={[purchase]} columns={columns} />

@@ -9,13 +9,15 @@ export function useHomeTableColumn() {
   const columns = useMemo<ColumnDef<Purchase>[]>(() => {
     return [
       {
+        
         accessorKey: 'jan',
         header: 'jan',
         cell: ({ cell }) => {
           return (
             <TableMonthColumn cell={cell} />
           )
-        }
+        } ,
+        
       },
       {
         accessorKey: 'feb',
@@ -110,8 +112,8 @@ export function useHomeTableColumn() {
       {
         accessorKey: 'dec',
         header: 'dez',
+        
         cell: ({ cell }) => {
-          console.log('cell', cell)
           return (
             <TableMonthColumn cell={cell} />
           )
