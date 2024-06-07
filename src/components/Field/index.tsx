@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import { InputHTMLAttributes, useState } from "react"
+import { InputHTMLAttributes, useEffect, useState } from "react"
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, Label, Transition, Field as FieldHeadless, ComboboxButton } from '@headlessui/react'
 import { v4 as uuidV4 } from 'uuid';
 import { Control, useController } from "react-hook-form";
@@ -207,12 +207,7 @@ type SelectProps = FieldProps & {
 };
 
 function Select({ id = uuidV4(), name, label, onChange, options, placeholder, control, ...rest }: SelectProps) {
-  const [query, setQuery] = useState('')
-  const [selected, setSelected] = useState<SelectProp>({
-    value: 0,
-    label: '',
-  })
-
+  const [query, setQuery] = useState('');
   const { fieldState: { error }, field: { ref, onChange: fieldOnChange, value, ...fieldrest } } = useController({
     name,
     control,
@@ -220,22 +215,24 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, co
       label: '',
       value: 0,
     }
-  })
+  });
 
-  // @ts-expect-error insufficient rhf types
-  const errorMessage = error?.label?.message as string
+  const [selected, setSelected] = useState(value);
 
-  const filteredOptions =
-    query === ''
-      ? options
-      : options.filter((opt) => {
-        return opt.label.toLowerCase().includes(query.toLowerCase())
-      })
+  useEffect(() => {
+    setSelected(value);
+  }, [value]);
+
+  const errorMessage = error?.message as string;
+
+  const filteredOptions = query === ''
+    ? options
+    : options.filter((opt) => opt.label.toLowerCase().includes(query.toLowerCase()));
 
   return (
     <div>
-      <FieldHeadless className="w-full relative">
-        <Label
+      <div className="w-full relative">
+        <label
           className={classNames(
             "absolute text-sm text-gray-500 dark:text-gray-400",
             "duration-300 transform -translate-y-4 scale-75 top-4 z-10",
@@ -243,13 +240,14 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, co
             "peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100",
             "peer-placeholder-shown:translate-y-0 peer-focus:scale-75",
             "peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4",
-            "rtl:peer-focus:left-auto")}
+            "rtl:peer-focus:left-auto"
+          )}
         >
           {label}
-        </Label>
+        </label>
         <Combobox
           value={selected}
-          onChange={(value: any) => {
+          onChange={(value) => {
             setSelected(value);
             fieldOnChange(value);
             if (onChange) {
@@ -257,7 +255,7 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, co
             }
           }}
         >
-          <div className="relative">
+          <div className="">
             <ComboboxInput
               className={classNames(
                 "block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm",
@@ -268,7 +266,6 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, co
               )}
               ref={ref}
               displayValue={(option: any) => option?.label || ''}
-              defaultValue={selected?.label || ''}
               onChange={(event) => setQuery(event.target.value)}
               {...fieldrest}
               {...rest}
@@ -277,38 +274,26 @@ function Select({ id = uuidV4(), name, label, onChange, options, placeholder, co
               <IoIosArrowDown className="size-4 " />
             </ComboboxButton>
           </div>
-          <Transition
-            leave="transition ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            afterLeave={() => setQuery('')}
-          >
-            <ComboboxOptions
-              anchor="bottom" className="mt-1 z-10  bg-white rounded shadow-md "
-            >
-              {filteredOptions.map((opt) => (
-                <ComboboxOption
-                  key={opt.value}
-                  value={opt}
-
-                  className="group py-2 px-4 hover:bg-cyan-800/25 cursor-pointer w-[var(--input-width)] flex items-center gap-3"
-                >
-                  <BiCheck className="invisible size-4 group-data-[selected]:visible text-lime-950" />
-                  <span className="text-gray-800">{opt.label}</span>
-                </ComboboxOption>
-              )
-              )}
-            </ComboboxOptions>
-          </Transition>
+          <ComboboxOptions className="mt-1 z-20 bg-white rounded shadow-md absolute top-[50px]">
+            {filteredOptions.map((opt) => (
+              <ComboboxOption
+                key={opt.value}
+                value={opt}
+                className="group py-2 px-4 hover:bg-cyan-800/25 cursor-pointer w-[var(--input-width)] flex items-center gap-3"
+              >
+                <BiCheck className="invisible size-4 group-data-[selected]:visible text-lime-950" />
+                <span className="text-gray-800">{opt.label}</span>
+              </ComboboxOption>
+            ))}
+          </ComboboxOptions>
         </Combobox>
-      </FieldHeadless>
+      </div>
       {errorMessage && (
-        <FieldErrorMessage message={errorMessage} />
+        <div className="text-red-500 text-xs mt-1">{errorMessage}</div>
       )}
     </div>
-  )
+  );
 }
-
 
 
 export const Field = {

@@ -11,37 +11,33 @@ type Props = {
 
 export default function TableMonthColumn({ cell }: Props) {
     const columnName = cell.column.id
-    const currentMonthValue = cell.row.original.months[columnName as keyof Purchase['months']]
+    const cellMonthValue = cell.row.original.months[columnName as keyof Purchase['months']]
 
-
-    const todaysMonth = format(new Date(), 'MMM') 
-    // const todayDay = Number(format(new Date(), 'dd'))
-    const todayDay = 17
-    console.log('todayDay', todayDay)
-
+    let currentMonth = format(new Date(), 'MMM')
+    let todaysMonthAsNumber = Number(format(new Date(), 'MM'))
+    
+    const todayDay = Number(format(new Date(), 'dd'));
     const cardDueDay = cell.row.original.card.dueDay;
-    console.log('cardDueDay', cardDueDay)
 
-    // if(todayDay <= cardDueDay) {
-    //     todaysMonth++;
-    // }
+    if(todayDay > cardDueDay) {
+        let nextMonth = todaysMonthAsNumber++;
+        currentMonth = getMonthByNumber(nextMonth)
+    }
 
-
-    console.groupEnd();
 
     return (
         <div className={classNames("flex gap-4 items-center justify-center w-full h-full", {
-            'bg-cyan-800/25': todaysMonth === columnName && todayDay <= cardDueDay
+            'bg-cyan-800/25': currentMonth === columnName
         })} key={`${cell.id}-${cell.column}`}>
-            {currentMonthValue == undefined && (
+            {cellMonthValue == undefined && (
                 <BiX />
             )}
-            {currentMonthValue ? (
+            {cellMonthValue ? (
                 <div className={classNames("flex items-center justify-center w-5 h-5 rounded relative", {
-                    'bg-green-500': currentMonthValue.isPaid,
-                    'bg-red-500': !currentMonthValue.isPaid
+                    'bg-green-500': cellMonthValue.isPaid,
+                    'bg-red-500': !cellMonthValue.isPaid
                 })}>
-                    {currentMonthValue.isPaid ? (
+                    {cellMonthValue.isPaid ? (
                         <BiCheck color="white" />
                     ) : (
                         <BiX color="white" />
